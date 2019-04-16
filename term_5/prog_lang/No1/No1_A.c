@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
   
   fp = fopen(argv[1], "r");
   if (fp == NULL) {
-    printf("Failure open the file...\n");
+    printf("Failed to open the file...\n");
     return -1;
   }
 
