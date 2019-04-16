@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
   } else {
     fp = fopen(argv[1], "r");
     if (fp == NULL) {
-      printf("Failure open the file...\n");
+      printf("Failed to open the file...\n");
       return -1;
     }
 
@@ -64,7 +64,7 @@ node_t *new_node(char nm[NAME_LENGTH], int point, node_t *p)
   tmp = (node_t *)malloc(sizeof(node_t));
 
   if (tmp == NULL) {
-    printf("Failure allocate memory...\n");
+    printf("Failed to allocate memory...\n");
     return NULL;
   } else {
     strcpy(tmp->name, nm);
