@@ -6,55 +6,81 @@
 
 typedef int data_t;
 typedef int frequency_t;
+typedef enum {QUIT, INSERT, DELETE, SHOW} command_t;
 typedef struct node_tag {
   data_t data;
   frequency_t frequency;
+  struct node_tag *parent;
   struct node_tag *left;
   struct node_tag *right;
 }node_t;
 
-node_t *new_node(data_t x);
+node_t *new_node(data_t x, node_t *p);
 int insert(data_t x, node_t **pp);
+int delete(node_t **pp);
 node_t *is_member(data_t x, node_t *p);
-void show_preorder(node_t *p);
+node_t *min(node_t *p);
+node_t *max(node_t *p);
+void show_inorder(node_t *p);
 
-int main(int argc, char *argv[])
+int main()
 {
-  FILE *fp;
   node_t *root, *tmp;
   data_t num;
+  int cmd;
 
-  if (argc < 2) {
-    printf("Usage: ./No4 [filename]");
-    return -1;
-  } else {
+  /* initialize */
+  root = NULL;
+  
+  printf("===commands===\n");
+  printf("%d: QUIT\n", QUIT);
+  printf("%d: INSERT\n", INSERT);
+  printf("%d: DELETE\n", DELETE);
+  printf("%d: SHOW\n", SHOW);
 
-    if ((fp = fopen(argv[1], "r")) == NULL) {
-      printf("Failed to open the file.\n");
-      return -1;
-    }
+  cmd = QUIT;
+  do {
+    printf("cmd>");
+    scanf("%d", &cmd);
+    if (cmd == QUIT) {
+      
+      printf("Bye!\n");
 
-    /* initialize */
-    root = NULL;
-    
-    while(fscanf(fp, "%d", &num) != EOF) {
+    } else if (cmd == INSERT) {
+      printf("data>");
+      scanf("%d", &num);
       if ((tmp = is_member(num, root)) == NULL) {
-	if (insert(num, &root) == FAILURE) {
-	  printf("Failed to insert new node.\n");
-	}
+        if (insert(num, &root) == FAILURE) {
+          printf("Failed to insert a new node.\n");
+        } 
       } else {
-	tmp->frequency += 1;
+        tmp->frequency += 1;
       }
-    }
 
-    printf("data: frequensy\n");
-    show_preorder(root);
-  }
+    } else if (cmd == DELETE) {
+      printf("data>");
+      scanf("%d", &num);
+      if ((tmp = is_member(num, root)) == NULL) {
+        printf("The node that has the number is not exist.\n");
+      } else {
+        tmp->frequency -= 1;
+        if (tmp->frequency == 0) {
+          if (delete(&tmp) == FAILURE) {
+            printf("Failed to delete a node.\n");
+          }
+        }
+      }
+    } else if (cmd == SHOW) {
+      printf("data: frequency\n");
+      show_inorder(root);
+    }
+  
+  }while (cmd != QUIT);
   
   return 0;
 }
 
-node_t *new_node(data_t x)
+node_t *new_node(data_t x, node_t *p)
 {
   node_t *tmp;
 
@@ -65,6 +91,7 @@ node_t *new_node(data_t x)
   } else {
     tmp->data = x;
     tmp->frequency = 1;
+    tmp->parent = p;
     tmp->left = NULL;
     tmp->right = NULL;
   }
@@ -77,7 +104,7 @@ int insert(data_t x, node_t **pp)
   node_t *tmp;
 
   if (*pp == NULL) {
-    tmp = new_node(x);
+    tmp = new_node(x, *pp);
     if (tmp == NULL) {
       return FAILURE;
     }
@@ -92,6 +119,54 @@ int insert(data_t x, node_t **pp)
   }
 }
 
+int delete(node_t **pp)
+{
+  node_t *tmp;
+  
+  if ((*pp)->right != NULL) {
+    tmp = min((*pp)->right);
+    tmp->parent->left = NULL;
+    (*pp)->right->parent = tmp;
+    if ((*pp)->left != NULL) {
+      (*pp)->left->parent = tmp;
+    }
+    
+  } else if ((*pp)->left != NULL) {
+    tmp = max((*pp)->left);  
+  } else {
+    tmp = NULL;
+  }
+
+  if ((*pp)->parent != NULL) {
+    if ((*pp)->parent->left == *pp) {
+      (*pp)->parent->left = tmp;
+      tmp->left = (*pp)->left;
+      tmp->right = (*pp)->right;
+    } else if ((*pp)->parent->right == *pp) {
+      (*pp)->parent->right = tmp;
+      tmp->left = (*pp)->left;
+      tmp->right = (*pp)->right;
+    }
+  }
+
+  free(*pp);
+}
+
+node_t *min(node_t *p)
+{
+  while (p->left != NULL) {
+    p = p->left;
+  }
+  return p;
+}
+
+node_t *max(node_t *p)
+{
+  while (p->right != NULL) {
+    p = p->right;
+  }
+  return p;
+}
 
 node_t *is_member(data_t x, node_t *p)
 {
@@ -108,11 +183,11 @@ node_t *is_member(data_t x, node_t *p)
   }
 }
 
-void show_preorder(node_t *p)
+void show_inorder(node_t *p)
 {
   if (p != NULL) {
+    show_inorder(p->left);
     printf("%4d: %9d\n", p->data, p->frequency);
-    show_preorder(p->left);
-    show_preorder(p->right);
+    show_inorder(p->right);
   }
 }
