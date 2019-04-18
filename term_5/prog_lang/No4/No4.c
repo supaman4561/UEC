@@ -17,10 +17,9 @@ typedef struct node_tag {
 
 node_t *new_node(data_t x, node_t *p);
 int insert(data_t x, node_t **pp);
-int delete(node_t **pp);
+int delete(data_t x, node_t **pp);
 node_t *is_member(data_t x, node_t *p);
-node_t *min(node_t *p);
-node_t *max(node_t *p);
+node_t *delete_min(node_t **p);
 void show_inorder(node_t *p);
 
 int main()
@@ -63,16 +62,15 @@ int main()
       if ((tmp = is_member(num, root)) == NULL) {
         printf("The node that has the number is not exist.\n");
       } else {
-        tmp->frequency -= 1;
-        if (tmp->frequency == 0) {
-          if (delete(&tmp) == FAILURE) {
-            printf("Failed to delete a node.\n");
-          }
+        if (delete(num, &root) == FAILURE) {
+          printf("Failed to delete a node.\n");
         }
       }
     } else if (cmd == SHOW) {
       printf("data: frequency\n");
       show_inorder(root);
+    } else {
+      printf("The command is not exist.\n");
     }
   
   }while (cmd != QUIT);
@@ -119,53 +117,50 @@ int insert(data_t x, node_t **pp)
   }
 }
 
-int delete(node_t **pp)
+int delete(data_t x, node_t **pp)
 {
   node_t *tmp;
-  
-  if ((*pp)->right != NULL) {
-    tmp = min((*pp)->right);
-    tmp->parent->left = NULL;
-    (*pp)->right->parent = tmp;
-    if ((*pp)->left != NULL) {
-      (*pp)->left->parent = tmp;
-    }
-    
-  } else if ((*pp)->left != NULL) {
-    tmp = max((*pp)->left);  
-  } else {
-    tmp = NULL;
-  }
 
-  if ((*pp)->parent != NULL) {
-    if ((*pp)->parent->left == *pp) {
-      (*pp)->parent->left = tmp;
-      tmp->left = (*pp)->left;
-      tmp->right = (*pp)->right;
-    } else if ((*pp)->parent->right == *pp) {
-      (*pp)->parent->right = tmp;
-      tmp->left = (*pp)->left;
-      tmp->right = (*pp)->right;
+  while (*pp != NULL) {
+    if ((*pp)->data == x) {
+      if ((*pp)->frequency > 1) {
+        (*pp)->frequency -= 1;
+        return SUCCESS;
+      } else {
+        tmp = *pp;
+        if (tmp->right == NULL && tmp->left == NULL) {
+          *pp = NULL;
+        } else if (tmp->right == NULL) {
+          *pp = tmp->left;
+        } else if (tmp->left == NULL) {
+          *pp = tmp->right;
+        } else {
+          *pp = delete_min(&(tmp->right));
+          (*pp)->right = tmp->right;
+          (*pp)->left = tmp->left;
+        }
+        free(tmp);
+        return SUCCESS;
+      }
+    } else if (x > (*pp)->data) {
+      pp = &((*pp)->right);
+    } else {
+      pp = &((*pp)->left);
     }
   }
-
-  free(*pp);
+  return FAILURE;
 }
 
-node_t *min(node_t *p)
+node_t *delete_min(node_t **p)
 {
-  while (p->left != NULL) {
-    p = p->left;
-  }
-  return p;
-}
+  node_t *q;
 
-node_t *max(node_t *p)
-{
-  while (p->right != NULL) {
-    p = p->right;
+  while ((*p)->left != NULL) {
+    p = &((*p)->left);
   }
-  return p;
+  q = *p;
+  *p = (*p)->right;
+  return q;
 }
 
 node_t *is_member(data_t x, node_t *p)
