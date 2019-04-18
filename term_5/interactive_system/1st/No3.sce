@@ -67,7 +67,7 @@ playsnd(makesnd(0, 0.10));
 playsnd(makesnd(E5, 0.15));
 
 /* Harry Potter */
-
+/*
 playsnd(hardclipping(makesnd(B4, 0.6)));
 playsnd(hardclipping(makesnd(E5, 0.8)));
 playsnd(hardclipping(makesnd(0, 0.08)));
@@ -83,3 +83,4 @@ playsnd(hardclipping(makesnd(F5s, 0.4)));
 playsnd(hardclipping(makesnd(D5s, 0.8)));
 playsnd(hardclipping(makesnd(F5, 0.4)));
 playsnd(hardclipping(makesnd(B4, 1.2)));
+*/
