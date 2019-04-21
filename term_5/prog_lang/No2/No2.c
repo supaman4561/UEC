@@ -4,7 +4,6 @@
 
 #define SUCCESS 1
 #define FAILURE 0
-#define LINE_SIZE 256
 #define NAME_LENGTH 256
 
 typedef struct node_tag {
@@ -22,7 +21,7 @@ void show_list(node_t *p);
 int main(int argc, char *argv[])
 {
   FILE *fp;
-  char name[NAME_LENGTH], str[LINE_SIZE];
+  char name[NAME_LENGTH];
   node_t head_name, head_point;
   int point,i;
   
