@@ -1,155 +1,123 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define SUCCESS 1
-#define FAILURE 0
-#define NAME_LENGTH 256
-
+ 
+//https://www.ied.inf.uec.ac.jp/support/projects/ied-support/wiki/%E6%95%99%E6%9D%90
+ 
+#define SUCCESS 1    /* 成功*/ 
+#define FAILURE 0    /* 失敗*/
+#define SIZE 100
+ 
+/*---------------------------------------------------------------------------------------*/
+ 
+//構造体宣言
+typedef char* string_type;
+typedef int int_type;
 typedef struct node_tag {
-  struct node_tag *next;
-  char name[NAME_LENGTH];
-  int point;
-}node_t;
+    string_type name;       //名前
+    int_type point;         //点数
+    struct node_tag *next;   /* 後続ノードへのポインタ*/
+} node_type;                     /* ノードの型*/
+ 
+void print_nodes(node_type *p);
 
-node_t *new_node(char nm[NAME_LENGTH], int point, node_t *p);
-int insert_by_name(char nm[NAME_LENGTH], int point, node_t *head);
-int comp_by_name(char name1[NAME_LENGTH], char name2[NAME_LENGTH]);
-void move_nodes_by_points(node_t *head_name, node_t *head_point);
-void show_list(node_t *p);
 
-int main(int argc, char *argv[])
+//線形リストの初期化
+void initialize(node_type **pp)
 {
-  FILE *fp;
-  char name[NAME_LENGTH];
-  node_t head_name, head_point;
-  int point,i;
-  
-  if (argc < 2) {
-    printf("Usage: ./No2 [filename]\n");
-  } else {
-    fp = fopen(argv[1], "r");
-    if (fp == NULL) {
-      printf("Failed to open the file...\n");
-      return -1;
-    }
-
-    head_name.next = NULL;
-    i = 0;
-    while (fscanf(fp, "%d,%s", &point, name) != EOF) {
-      insert_by_name(name, point, &head_name);
-    }
-
-    printf("***name order***\n");
-    show_list(&head_name);
-
-    move_nodes_by_points(&head_name, &head_point);
-
-    printf("***points order***\n");
-    show_list(&head_point);
-
-    printf("Confirm that linear list 'head_name' is empty.\n");
-    show_list(&head_name);
-
-  }
-  
-  return 0;
+    *pp = NULL;     //先頭ノードなし
 }
-
-node_t *new_node(char nm[NAME_LENGTH], int point, node_t *p)
+ 
+//新しいノードの生成と値の設定
+node_type *new_node(string_type na, int_type po, node_type *p)
 {
-  node_t *tmp;
+    node_type *temp;
+ 
+    temp = (node_type *)malloc(sizeof(node_type));  //メモリ割り当て
+    temp->name = (string_type)malloc(sizeof(char) * SIZE);
 
-  tmp = (node_t *)malloc(sizeof(node_t));
-
-  if (tmp == NULL) {
-    printf("Failed to allocate memory...\n");
-    return NULL;
-  } else {
-    strcpy(tmp->name, nm);
-    tmp->point = point;
-    tmp->next = p;
-    return tmp;
-  }
+    if(temp == NULL){ return NULL; }            //メモリ割り当て失敗
+    else{                       //ノードの各メンバの値の設定
+        strcpy(temp->name, na);
+        temp->point = po;
+        temp->next = p;
+        return temp;
+    }
 }
-
-int insert_by_name(char nm[NAME_LENGTH], int point, node_t *head)
+ 
+//線形リストに名前順で挿入
+int insert(string_type na, int_type po, node_type **pp) //node_type **ppはヘッダのポインタ
 {
-  node_t *tmp, *p;
+    node_type *temp;
+    temp = new_node(na, po, NULL);    /* 関数new_nodeの呼出し*/
 
-  tmp = new_node(nm, point, NULL);
-  if (tmp == NULL) return FAILURE;
-  p = head;
-  while (p->next != NULL) {
-    if(comp_by_name(tmp->name, p->next->name) == 1){
-      break;
+    //挿入すべき場所を探す
+    if(temp == NULL){ return FAILURE; }
+
+    if (*pp == NULL)  {
+        *pp = temp;
     } else {
-      p = p->next;
+        while((*pp) != NULL && (strcmp(temp->name, (*pp)->name)) > 0 ) {
+            pp = &((*pp)->next);
+        }
+        temp->next = (*pp);
+        *pp = temp;
     }
-  }
 
-  tmp->next = p->next;
-  p->next = tmp;
-  return SUCCESS;
+    return SUCCESS;
 }
+
 
 /*
-  1: name1 -> name2
-  0: name1 = name2
- -1: name2 -> name1
+//線形リストの末尾へのノード挿入
+int insert_rear(string_type na, int_type po, node_type **pp) //node_type **ppはヘッダのポインタ
+{
+    node_type *temp;
+    temp = new_node(na, po, NULL);    // 関数new_nodeの呼出し
+    if(temp == NULL){ return FAILURE; }
+    while(*pp != NULL) {    // 末尾のノードまで進める
+       pp = &((*pp)->next);
+    }
+    *pp = temp;
+    return SUCCESS;
+}
 */
-int comp_by_name(char name1[NAME_LENGTH], char name2[NAME_LENGTH])
+ 
+void print_nodes(node_type *p)
 {
-  char c1, c2;
-  int i;
-
-  i = 0;
-  while (name1[i] != '\0' && name2[i] != '\0') {
-    if (name1[i] < name2[i]) {
-      return 1;
-    } else if (name1[i] > name2[i]) {
-      return -1;
+    while(p != NULL)
+    {
+        printf("Name:%s,Point:%d\n", p->name, p->point); //データの表示
+        p = p->next;
     }
-    i++;
-  }
-
-  return 0;
 }
-
-/** 
- * move nodes from linear list "head_name" 
- * to another linear list "head_point" according to point.
- */
-void move_nodes_by_points(node_t *head_name, node_t *head_point)
+ 
+ 
+/*---------------------------------------------------------------------------------------*/
+ 
+int main(int argc, char **argv)
 {
-  node_t *target, *target_prev, *p, *head_point_rear;
-
-  head_point_rear = head_point;
-  while (head_name->next != NULL) {
-    target_prev = head_name;
-    p = head_name;
-    while (p->next != NULL) {
-      if (target_prev->next->point < p->next->point) {
-        target_prev = p;
-      }
-      p = p->next;
+    FILE *fp;
+    char na[256];
+    int po;
+     
+    node_type *head;
+    initialize(&head);
+ 
+    if((fp = fopen(argv[1], "r")) == NULL){
+    perror(argv[1]);
+        exit(1);
     }
-    target = target_prev->next;
-    target_prev->next = target->next;
-    head_point_rear->next = target;
-    head_point_rear = head_point_rear->next;
-  }
-}
-
-/**
- * show all contents of linear list.
- */
-void show_list(node_t *head)
-{
-  node_t *p;
-  p = head->next;
-  while (p != NULL) {
-    printf("name: %s, point: %d\n", p->name, p->point);
-    p = p->next;
-  }
+ 
+    while(fscanf(fp, "%[^,],%d\n", na, &po) != EOF)  //End Of File
+    {
+        insert(na, po, &head);
+    }
+    printf("\n");
+ 
+    print_nodes(head);
+ 
+    fclose(fp);
+     
+    return 0;
 }
