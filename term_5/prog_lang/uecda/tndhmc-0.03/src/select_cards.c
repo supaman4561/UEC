@@ -51,7 +51,7 @@ void select_cards_free(int select_cards[8][15], int my_cards[8][15], state *fiel
 
   // 出すカードが決まっていない
   if (count_cards(select_cards) == 0) {
-    search_low_pair(select_cards, info_table, my_cards);
+    search_high_pair(select_cards, info_table, my_cards);
   }
 
   // 出すカードが決まっていない
