@@ -6,93 +6,81 @@
 
 typedef int data_t;
 typedef int frequency_t;
+typedef enum {QUIT, INSERT, DELETE, SHOW} command_t;
 typedef struct node_tag {
   data_t data;
   frequency_t frequency;
+  struct node_tag *parent;
   struct node_tag *left;
   struct node_tag *right;
 }node_t;
 typedef enum {INSERT, DELETE, SHOW, QUIT} command_t;
 
-node_t *new_node(data_t x);
+node_t *new_node(data_t x, node_t *p);
 int insert(data_t x, node_t **pp);
 int delete(data_t x, node_t **pp);
 node_t *is_member(data_t x, node_t *p);
-node_t *min_node(node_t *p);
-node_t *max_node(node_t *p);
+node_t *delete_min(node_t **p);
 void show_inorder(node_t *p);
 
-int main(void)
+int main()
 {
   node_t *root, *tmp;
   data_t num;
-  int command;
+  int cmd;
 
   /* initialize */
   root = NULL;
   
   printf("===commands===\n");
-  printf("0: insert\n");
-  printf("1: delete\n");
-  printf("2: show\n");
-  printf("3: quit\n");
-  
+
+  printf("%d: QUIT\n", QUIT);
+  printf("%d: INSERT\n", INSERT);
+  printf("%d: DELETE\n", DELETE);
+  printf("%d: SHOW\n", SHOW);
+
+  cmd = QUIT;
   do {
-    printf("command>");
-    scanf("%d", &command);
-    
-    if (command == INSERT) {
+    printf("cmd>");
+    scanf("%d", &cmd);
+    if (cmd == QUIT) {
       
+      printf("Bye!\n");
+    } else if (cmd == INSERT) {
       printf("data>");
       scanf("%d", &num);
-
       if ((tmp = is_member(num, root)) == NULL) {
-	if (insert(num, &root) == FAILURE) {
-	  printf("Failed to insert new node.\n");
-	}
+        if (insert(num, &root) == FAILURE) {
+          printf("Failed to insert a new node.\n");
+        } 
       } else {
-	tmp->frequency += 1;
+        tmp->frequency += 1;
       }
-      
-    } else if (command == DELETE) {
 
+    } else if (cmd == DELETE) {
       printf("data>");
       scanf("%d", &num);
-
       if ((tmp = is_member(num, root)) == NULL) {
-	printf("The data is not exist.\n");
+        printf("The node that has the number is not exist.\n");
       } else {
-	if (tmp->frequency == 1) {
-	  if (delete(num, &root) == FAILURE) {
-	    printf("Failed to remove node.\n");
-	  }
-	} else {
-	  tmp->frequency -= 1;
-	}
+        if (delete(num, &root) == FAILURE) {
+          printf("Failed to delete a node.\n");
+        }
       }
 
-    } else if (command == SHOW) {
-
+    } else if (cmd == SHOW) {
       printf("data: frequency\n");
       show_inorder(root);
-
-    } else if (command == QUIT){
-
-      printf("Bye!\n");
-      
     } else {
-
-      printf("Invalid command\n");
-
+      printf("The command is not exist.\n");
     }
-    
-  }while (command != QUIT);
-
+  
+  }while (cmd != QUIT);
   
   return 0;
 }
 
-node_t *new_node(data_t x)
+node_t *new_node(data_t x, node_t *p)
 {
   node_t *tmp;
 
@@ -103,6 +91,7 @@ node_t *new_node(data_t x)
   } else {
     tmp->data = x;
     tmp->frequency = 1;
+    tmp->parent = p;
     tmp->left = NULL;
     tmp->right = NULL;
   }
@@ -115,7 +104,7 @@ int insert(data_t x, node_t **pp)
   node_t *tmp;
 
   if (*pp == NULL) {
-    tmp = new_node(x);
+    tmp = new_node(x, *pp);
     if (tmp == NULL) {
       return FAILURE;
     }
@@ -132,43 +121,49 @@ int insert(data_t x, node_t **pp)
 
 int delete(data_t x, node_t **pp)
 {
-  node_t *tmp, *prev;
-  
-  if (*pp == NULL) {
-    return FAILURE;
-  } else {
+  node_t *tmp;
+
+  while (*pp != NULL) {
     if ((*pp)->data == x) {
-      if ((*pp)->right != NULL) {
-	tmp = min_node((*pp)->right);
-      } else if ((*pp)->left != NULL) {
-	tmp = max_node((*pp)->left);
+      if ((*pp)->frequency > 1) {
+        (*pp)->frequency -= 1;
+        return SUCCESS;
       } else {
-	tmp = *pp;
+        tmp = *pp;
+        if (tmp->right == NULL && tmp->left == NULL) {
+          *pp = NULL;
+        } else if (tmp->right == NULL) {
+          *pp = tmp->left;
+        } else if (tmp->left == NULL) {
+          *pp = tmp->right;
+        } else {
+          *pp = delete_min(&(tmp->right));
+          (*pp)->right = tmp->right;
+          (*pp)->left = tmp->left;
+        }
+        free(tmp);
+        return SUCCESS;
       }
-      (*pp)->data = tmp->data;
-      free(tmp);
+    } else if (x > (*pp)->data) {
+      pp = &((*pp)->right);
+    } else {
+      pp = &((*pp)->left);
     }
-    return SUCCESS;
   }
+  return FAILURE;
 }
 
-node_t *min_node_prev(node_t *p)
+node_t *delete_min(node_t **p)
 {
-  while (p->left != NULL) {
-    p = p->left;
+  node_t *q;
+
+  while ((*p)->left != NULL) {
+    p = &((*p)->left);
   }
-  return p;
+  q = *p;
+  *p = (*p)->right;
+  return q;
 }
-
-node_t *max_node(node_t *p)
-{
-  while (p->right != NULL) {
-    p = p->right;
-  }
-  return p;
-}
-
-
 
 node_t *is_member(data_t x, node_t *p)
 {
