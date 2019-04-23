@@ -12,32 +12,40 @@ typedef struct node_tag {
   struct node_tag *left;
   struct node_tag *right;
 }node_t;
+typedef enum {INSERT, DELETE, SHOW, QUIT} command_t;
 
 node_t *new_node(data_t x);
 int insert(data_t x, node_t **pp);
+int delete(data_t x, node_t **pp);
 node_t *is_member(data_t x, node_t *p);
-void show_preorder(node_t *p);
+node_t *min_node(node_t *p);
+node_t *max_node(node_t *p);
+void show_inorder(node_t *p);
 
-int main(int argc, char *argv[])
+int main(void)
 {
-  FILE *fp;
   node_t *root, *tmp;
   data_t num;
+  int command;
 
-  if (argc < 2) {
-    printf("Usage: ./No4 [filename]");
-    return -1;
-  } else {
-
-    if ((fp = fopen(argv[1], "r")) == NULL) {
-      printf("Failed to open the file.\n");
-      return -1;
-    }
-
-    /* initialize */
-    root = NULL;
+  /* initialize */
+  root = NULL;
+  
+  printf("===commands===\n");
+  printf("0: insert\n");
+  printf("1: delete\n");
+  printf("2: show\n");
+  printf("3: quit\n");
+  
+  do {
+    printf("command>");
+    scanf("%d", &command);
     
-    while(fscanf(fp, "%d", &num) != EOF) {
+    if (command == INSERT) {
+      
+      printf("data>");
+      scanf("%d", &num);
+
       if ((tmp = is_member(num, root)) == NULL) {
 	if (insert(num, &root) == FAILURE) {
 	  printf("Failed to insert new node.\n");
@@ -45,11 +53,41 @@ int main(int argc, char *argv[])
       } else {
 	tmp->frequency += 1;
       }
-    }
+      
+    } else if (command == DELETE) {
 
-    printf("data: frequensy\n");
-    show_preorder(root);
-  }
+      printf("data>");
+      scanf("%d", &num);
+
+      if ((tmp = is_member(num, root)) == NULL) {
+	printf("The data is not exist.\n");
+      } else {
+	if (tmp->frequency == 1) {
+	  if (delete(num, &root) == FAILURE) {
+	    printf("Failed to remove node.\n");
+	  }
+	} else {
+	  tmp->frequency -= 1;
+	}
+      }
+
+    } else if (command == SHOW) {
+
+      printf("data: frequency\n");
+      show_inorder(root);
+
+    } else if (command == QUIT){
+
+      printf("Bye!\n");
+      
+    } else {
+
+      printf("Invalid command\n");
+
+    }
+    
+  }while (command != QUIT);
+
   
   return 0;
 }
@@ -92,6 +130,45 @@ int insert(data_t x, node_t **pp)
   }
 }
 
+int delete(data_t x, node_t **pp)
+{
+  node_t *tmp, *prev;
+  
+  if (*pp == NULL) {
+    return FAILURE;
+  } else {
+    if ((*pp)->data == x) {
+      if ((*pp)->right != NULL) {
+	tmp = min_node((*pp)->right);
+      } else if ((*pp)->left != NULL) {
+	tmp = max_node((*pp)->left);
+      } else {
+	tmp = *pp;
+      }
+      (*pp)->data = tmp->data;
+      free(tmp);
+    }
+    return SUCCESS;
+  }
+}
+
+node_t *min_node_prev(node_t *p)
+{
+  while (p->left != NULL) {
+    p = p->left;
+  }
+  return p;
+}
+
+node_t *max_node(node_t *p)
+{
+  while (p->right != NULL) {
+    p = p->right;
+  }
+  return p;
+}
+
+
 
 node_t *is_member(data_t x, node_t *p)
 {
@@ -108,11 +185,11 @@ node_t *is_member(data_t x, node_t *p)
   }
 }
 
-void show_preorder(node_t *p)
+void show_inorder(node_t *p)
 {
   if (p != NULL) {
+    show_inorder(p->left);
     printf("%4d: %9d\n", p->data, p->frequency);
-    show_preorder(p->left);
-    show_preorder(p->right);
+    show_inorder(p->right);
   }
 }
