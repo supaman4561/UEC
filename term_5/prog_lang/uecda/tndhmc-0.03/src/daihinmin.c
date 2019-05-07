@@ -26,11 +26,31 @@ void search_low_card(int out_cards[8][15],int my_cards[8][15],int use_joker_flag
 
 void make_info_table(int info_table[8][15],int my_cards[8][15])
 {
-  int i;
-  clear_table(info_table);
-  for(i=1;i<=13;i++){
-    info_table[4][i]=my_cards[0][i]+my_cards[1][i]+my_cards[2][i]+my_cards[3][i];
+  int cnt, i, j;
+  copy_table(info_table, my_cards);
+
+  // for sequence
+  for(i=0;i<4;i++){
+    cnt=0;
+    for(j=1;j<=13;j++){
+      if(info_table[i][j]==0){
+	for(;cnt>=3;cnt--){
+	  info_table[i][j-cnt] = cnt;
+	}
+	cnt=0;
+      }else{
+	cnt++;
+      }
+    }
   }
+  
+  // for pair 
+  for(i=1;i<=13;i++){
+    for(j=0;j<4;j++){
+      info_table[4][i]+=(my_cards[j][i]>0);
+    }
+  }
+
 }
 
 int search_low_pair(int dst_cards[8][15],int info_table[8][15],int my_cards[8][15])
@@ -51,6 +71,26 @@ int search_low_pair(int dst_cards[8][15],int info_table[8][15],int my_cards[8][1
     return 1;
   }
   else{
+    return 0;
+  }
+}
+
+int search_low_pair_restrict(int dst_cards[8][15], int info_table[8][15], int my_cards[8][15], int order, int quantity)
+{
+  int i,j;
+  clear_table(dst_cards);
+  for (i=order; i<=13; i++) {
+    if (info_table[4][i]>=quantity) {
+      break;
+    }
+  }
+
+  if (i<=13) {
+    for (j=0; j<=3; j++) {
+      dst_cards[j][i] = my_cards[j][i];
+    }
+    return 1;
+  } else {
     return 0;
   }
 }
@@ -120,4 +160,40 @@ int search_quantity_pair(int dst_cards[8][15], int info_table[8][15], int my_car
   } else {
     return 0;
   }
+}
+
+int search_low_sequence(int dst_cards[8][15], int info_table[8][15], int my_cards[8][15])
+{
+  int i,j,k;
+
+  for (i=1; i<=13; i++) {
+    for (j=0; j<4; j++) {
+      if (info_table[j][i] >= 3) {
+	for (k=0;k<info_table[j][i];k++) {
+	  dst_cards[j][i+k] = 1;
+	}
+	return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+
+int search_low_sequence_restrict(int dst_cards[8][15], int info_table[8][15], int my_cards[8][15], int order, int quantity)
+{
+  int i,j,k;
+
+  for (i=order; i<=13; i++) {
+    for (j=0; j<4; j++) {
+      if (info_table[j][i] >= quantity) {
+	for (k=0;k<info_table[j][i];k++) {
+	  dst_cards[j][i+k] = 1;
+	}
+	return 1;
+      }
+    }
+  }
+
+  return 0;
 }

@@ -51,7 +51,12 @@ void select_cards_free(int select_cards[8][15], int my_cards[8][15], state *fiel
 
   // 出すカードが決まっていない
   if (count_cards(select_cards) == 0) {
-    search_high_pair(select_cards, info_table, my_cards);
+    search_low_sequence(select_cards, info_table, my_cards);
+  }
+
+  // 出すカードが決まっていない
+  if (count_cards(select_cards) == 0) {
+    search_low_pair(select_cards, info_table, my_cards);
   }
 
   // 出すカードが決まっていない
@@ -62,21 +67,23 @@ void select_cards_free(int select_cards[8][15], int my_cards[8][15], state *fiel
 
 void select_cards_restrict(int select_cards[8][15], int my_cards[8][15], state *field_status){
   int tmp_cards[8][15];
- 
+  int info_table[8][15];
+  
   copy_table(tmp_cards, my_cards); 
-
+  make_info_table(info_table, my_cards);
+  
   if(field_status->is_sequence==1){ // 場が階段のとき
     if(field_status->is_lock==1){ // 場が縛られている
 
     }else{ // 場が縛られていない
-
+      search_low_sequence_restrict(select_cards, info_table, my_cards, field_status->order, field_status->quantity);
     }
 
   }else if(field_status->quantity > 1){ // 場がペアのとき
     if(field_status->is_lock==1){ // 場が縛られている
 
     }else{ // 場が縛られていない
-
+      search_low_pair_restrict(select_cards, info_table, my_cards, field_status->order, field_status->quantity);
     }
   }else{ // 場が単騎のとき
     if(field_status->is_lock==1){ // 場が縛られている
