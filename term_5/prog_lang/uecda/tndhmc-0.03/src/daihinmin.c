@@ -24,6 +24,39 @@ void search_low_card(int out_cards[8][15],int my_cards[8][15],int use_joker_flag
   }
 }
 
+void search_low_card_wosp(int dst_cards[8][15],int info_table[8][15], int my_cards[8][15],int use_joker_flag){
+  int i,j,k,find_flag=0;
+
+  clear_table(dst_cards);
+
+  // シークエンスとして出せる札をmy_cardsから削除
+  for (i=0; i<4; i++) {
+    for (j=1; j<=13; j++) {
+      if (info_table[i][j] >= 3) {
+	for (k=0; k<info_table[i][j]; k++) {
+	  info_table[i][j+k] = 0;
+	}
+      }
+    }
+  }
+  
+  for(j=1;j<14&&find_flag==0;j++){        
+    for(i=0;i<4&&find_flag==0;i++){
+      if(my_cards[i][j]==1){
+	if(info_table[4][j]==1){   // ペアが存在しない
+	  find_flag=1;
+	  dst_cards[i][j]=my_cards[i][j];
+	}
+      }
+    }
+  }
+
+  // push joker
+  if(find_flag==0&&use_joker_flag==1){       
+    dst_cards[0][14]=2;                  
+  }
+}
+
 void make_info_table(int info_table[8][15],int my_cards[8][15])
 {
   int cnt, i, j;
@@ -75,13 +108,15 @@ int search_low_pair(int dst_cards[8][15],int info_table[8][15],int my_cards[8][1
   }
 }
 
-int search_low_pair_restrict(int dst_cards[8][15], int info_table[8][15], int my_cards[8][15], int order, int quantity)
+int search_low_pair_restrict(int dst_cards[8][15], int info_table[8][15], int my_cards[8][15], int quantity)
 {
   int i,j;
   clear_table(dst_cards);
-  for (i=order; i<=13; i++) {
+  for (i=1; i<=13; i++) {
     if (info_table[4][i]>=quantity) {
-      break;
+      if ((my_cards[0][i]+my_cards[1][i]+my_cards[2][i]+my_cards[3][i])>=quantity) {
+	break;
+      }
     }
   }
 
@@ -180,17 +215,19 @@ int search_low_sequence(int dst_cards[8][15], int info_table[8][15], int my_card
   return 0;
 }
 
-int search_low_sequence_restrict(int dst_cards[8][15], int info_table[8][15], int my_cards[8][15], int order, int quantity)
+int search_low_sequence_restrict(int dst_cards[8][15], int info_table[8][15], int my_cards[8][15], int quantity)
 {
   int i,j,k;
 
-  for (i=order; i<=13; i++) {
+  for (i=1; i<=13; i++) {
     for (j=0; j<4; j++) {
       if (info_table[j][i] >= quantity) {
-	for (k=0;k<info_table[j][i];k++) {
-	  dst_cards[j][i+k] = 1;
+	if (my_cards[j][i] == 1) {
+	  for (k=0;k<info_table[j][i];k++) {
+	    dst_cards[j][i+k] = 1;
+	  }
+	  return 1;
 	}
-	return 1;
       }
     }
   }

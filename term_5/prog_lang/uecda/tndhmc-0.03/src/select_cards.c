@@ -74,25 +74,31 @@ void select_cards_restrict(int select_cards[8][15], int my_cards[8][15], state *
   
   if(field_status->is_sequence==1){ // 場が階段のとき
     if(field_status->is_lock==1){ // 場が縛られている
-
+      remove_suit(tmp_cards, field_status->suit, 1);
+      remove_low_card(tmp_cards, field_status->order, 0);
+      search_low_sequence_restrict(select_cards, info_table, tmp_cards, field_status->quantity);
     }else{ // 場が縛られていない
-      search_low_sequence_restrict(select_cards, info_table, my_cards, field_status->order, field_status->quantity);
+      remove_low_card(tmp_cards, field_status->order, 0);
+      search_low_sequence_restrict(select_cards, info_table, tmp_cards, field_status->quantity);
     }
 
   }else if(field_status->quantity > 1){ // 場がペアのとき
     if(field_status->is_lock==1){ // 場が縛られている
-
+      remove_suit(tmp_cards, field_status->suit, 1);
+      remove_low_card(tmp_cards, field_status->order, 0);
+      search_low_pair_restrict(select_cards, info_table, tmp_cards, field_status->quantity);
     }else{ // 場が縛られていない
-      search_low_pair_restrict(select_cards, info_table, my_cards, field_status->order, field_status->quantity);
+      remove_low_card(tmp_cards, field_status->order, 0);
+      search_low_pair_restrict(select_cards, info_table, tmp_cards, field_status->quantity);
     }
   }else{ // 場が単騎のとき
     if(field_status->is_lock==1){ // 場が縛られている
       remove_suit(tmp_cards, field_status->suit, 1);
       remove_low_card(tmp_cards, field_status->order, 0); 
-      search_low_card(select_cards,tmp_cards,1); 
+      search_low_card_wosp(select_cards,info_table,tmp_cards,1); 
     }else{ // 場が縛られていない
       remove_low_card(tmp_cards, field_status->order, 0); 
-      search_low_card(select_cards,tmp_cards,1); 
+      search_low_card_wosp(select_cards,info_table,tmp_cards,1); 
     }
   }
 }
