@@ -57,22 +57,23 @@ void search_low_card_wosp(int dst_cards[8][15],int info_table[8][15], int my_car
   }
 }
 
-void make_info_table(int info_table[8][15],int my_cards[8][15])
+void make_info_table(int info_table[8][15], int info_j_table[8][15], int my_cards[8][15])
 {
-  int cnt, i, j;
-  copy_table(info_table, my_cards);
+  int cnt, i, j, zero_mark;
+  clear_table(info_table);
+  clear_table(info_j_table);
 
   // for sequence
   for(i=0;i<4;i++){
     cnt=0;
-    for(j=1;j<=13;j++){
-      if(info_table[i][j]==0){
-	for(;cnt>=3;cnt--){
-	  info_table[i][j-cnt] = cnt;
-	}
-	cnt=0;
-      }else{
-	cnt++;
+    for(j=13;j>=1;j--){
+      if (info_table[i][j]==0) {
+        cnt = 0;
+      }
+      cnt += my_cards[i][j];
+      info_table[i][j] = cnt;
+      if (info_table[i][j] == 2) {
+        info_table[i][j] = 1;
       }
     }
   }
@@ -81,6 +82,27 @@ void make_info_table(int info_table[8][15],int my_cards[8][15])
   for(i=1;i<=13;i++){
     for(j=0;j<4;j++){
       info_table[4][i]+=(my_cards[j][i]>0);
+    }
+  }
+
+  // make joker table
+  if (my_cards[4][1] == 2) {
+    // pair
+    for (i=1; i<=13; i++) {
+      info_j_table[4][i] = info_table[4][i] + 1;
+    }
+
+    // sequence
+    for (i=0; i<=3; i++) {
+      zero_mark = 14;
+      for (j=13; j>=1; j--) {
+        if (info_table[i][j] == 0) {
+          info_j_table[i][j] = info_j_table[i][j+1] - info_j_table[i][zero_mark] + 1;
+          zero_mark = j;
+        } else {
+          info_j_table[i][j] = info_j_table[i][j+1] + 1;
+        }
+      } 
     }
   }
 
@@ -105,6 +127,60 @@ int search_low_pair(int dst_cards[8][15],int info_table[8][15],int my_cards[8][1
   }
   else{
     return 0;
+  }
+}
+
+int search_low_pair_wj(int dst_cards[8][15], int info_j_table[8][15], int my_cards[8][15])
+{
+  int i, j, joker_used;
+
+  joker_used = 0;
+
+  for (i=1; i<=13; i++) {
+    if (info_j_table[4][i] >= 2) {
+      for (j=0; j<=3; j++) {
+        if (my_cards[j][i] == 0 && joker_used == 0) {
+          dst_cards[j][i] = 2;
+          joker_used = 1;
+        }
+        else {
+          dst_cards[j][i] = my_cards[j][i];
+        }
+      }
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+int search_max_quantity_pair_wj(int dst_cards[8][15], int info_j_table[8][15], int my_cards[8][15])
+{
+  int i, j, joker_used, max, max_i;
+
+  joker_used = 0;
+  max = 2;
+  max_i = 0;
+  for (i=1; i<=13; i++) {
+    if (info_j_table[4][i] > max) {
+      max_i = i;
+      max = info_j_table[4][i];      
+    }
+  }
+
+  if (max_i == 0) {
+    return 0;
+  } else {
+    for (i=0; i<=3; i++) {
+      if (my_cards[i][max_i] == 0 && joker_used == 0) {
+        dst_cards[i][max_i] = 2;
+        joker_used = 1;
+      } else {
+        dst_cards[i][max_i] = my_cards[i][max_i];
+      }
+    }
+
+    return 1;
   }
 }
 
@@ -204,10 +280,33 @@ int search_low_sequence(int dst_cards[8][15], int info_table[8][15], int my_card
   for (i=1; i<=13; i++) {
     for (j=0; j<4; j++) {
       if (info_table[j][i] >= 3) {
-	for (k=0;k<info_table[j][i];k++) {
-	  dst_cards[j][i+k] = 1;
-	}
-	return 1;
+	      for (k=0;k<info_table[j][i];k++) {
+	        dst_cards[j][i+k] = 1;
+	      }
+	      return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+
+int search_low_sequence_wj(int dst_cards[8][15], int info_j_table[8][15], int my_cards[8][15])
+{
+  int i,j,k;
+
+  for (i=1; i<=13; i++) {
+    for (j=0; j<=3; j++) {
+      if (info_j_table[j][i] >= 3) {
+        for (k=0; k<info_j_table[j][i]; k++) {
+          if (my_cards[j][i+k] == 0) {
+            dst_cards[j][i+k] = 2;
+          } else {
+            dst_cards[j][i+k] = 1;
+          }
+        }
+
+        return 1;
       }
     }
   }

@@ -46,21 +46,28 @@ void select_submit_cards(int out_cards[8][15],int my_cards[8][15], state *field_
 
 void select_cards_free(int select_cards[8][15], int my_cards[8][15], state *field_status){
   int info_table[8][15];
+  int info_j_table[8][15];
+  int submit = 0;
 
-  make_info_table(info_table, my_cards);
-
-  // 出すカードが決まっていない
-  if (count_cards(select_cards) == 0) {
-    search_low_sequence(select_cards, info_table, my_cards);
+  make_info_table(info_table, info_j_table, my_cards);
+  
+  if (submit == 0) {
+    submit = search_low_sequence_wj(select_cards, info_j_table, my_cards);
   }
 
-  // 出すカードが決まっていない
-  if (count_cards(select_cards) == 0) {
-    search_low_pair(select_cards, info_table, my_cards);
+  if (submit == 0) {
+    submit = search_low_sequence(select_cards, info_table, my_cards);
   }
 
-  // 出すカードが決まっていない
-  if (count_cards(select_cards) == 0) {
+  if (submit == 0) {
+    submit = search_low_pair(select_cards, info_table, my_cards);
+  }
+
+  if (submit == 0) {
+    submit = search_low_pair_wj(select_cards, info_j_table, my_cards);
+  }
+
+  if (submit == 0) {
     search_low_card(select_cards,my_cards,0); // 手持ちの一番弱いカードを単騎で提出する
   }
 }
@@ -68,9 +75,10 @@ void select_cards_free(int select_cards[8][15], int my_cards[8][15], state *fiel
 void select_cards_restrict(int select_cards[8][15], int my_cards[8][15], state *field_status){
   int tmp_cards[8][15];
   int info_table[8][15];
+  int info_j_table[8][15];
   
   copy_table(tmp_cards, my_cards); 
-  make_info_table(info_table, my_cards);
+  make_info_table(info_table, info_j_table, my_cards);
   
   if(field_status->is_sequence==1){ // 場が階段のとき
     if(field_status->is_lock==1){ // 場が縛られている
