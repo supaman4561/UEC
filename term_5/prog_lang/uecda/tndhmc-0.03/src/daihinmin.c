@@ -317,7 +317,7 @@ int search_low_sequence_restrict(int dst_cards[8][15], int info_table[8][15], in
     for (j=0; j<4; j++) {
       if (info_table[j][i] >= quantity) {
 	if (my_cards[j][i] == 1) {
-	  for (k=0;k<info_table[j][i];k++) {
+	  for (k=0;k<quantity;k++) {
 	    dst_cards[j][i+k] = 1;
 	  }
 	  return 1;
