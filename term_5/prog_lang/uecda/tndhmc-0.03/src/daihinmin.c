@@ -101,14 +101,6 @@ void make_info_table(int info_table[8][15], int info_j_table[8][15], int my_card
       } 
     }
   }
-
-  for (i=0; i<4; i++) {
-    for (j=1; j<=13; j++) {
-      printf("%d ", info_table[i][j]);
-    }
-    printf("\n");
-  }
-  printf("***************************\n");
 }
 
 int search_low_pair(int dst_cards[8][15],int info_table[8][15],int my_cards[8][15])

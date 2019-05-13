@@ -52,6 +52,10 @@ void select_cards_free(int select_cards[8][15], int my_cards[8][15], state *fiel
   make_info_table(info_table, info_j_table, my_cards);
 
   if (submit == 0) {
+    submit = search_low_pair_wj(select_cards, info_j_table, my_cards);
+  }
+
+  if (submit == 0) {
     submit = search_low_sequence(select_cards, info_table, my_cards);
   }
 
@@ -63,9 +67,7 @@ void select_cards_free(int select_cards[8][15], int my_cards[8][15], state *fiel
     submit = search_low_pair(select_cards, info_table, my_cards);
   }
 
-  if (submit == 0) {
-    submit = search_low_pair_wj(select_cards, info_j_table, my_cards);
-  }
+  
 
   if (submit == 0) {
     search_low_card(select_cards,my_cards,0); // 手持ちの一番弱いカードを単騎で提出する
