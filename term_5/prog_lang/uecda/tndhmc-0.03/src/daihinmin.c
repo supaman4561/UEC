@@ -33,9 +33,9 @@ void search_low_card_wosp(int dst_cards[8][15],int info_table[8][15], int my_car
   for (i=0; i<4; i++) {
     for (j=1; j<=13; j++) {
       if (info_table[i][j] >= 3) {
-	for (k=0; k<info_table[i][j]; k++) {
-	  info_table[i][j+k] = 0;
-	}
+        for (k=0; k<info_table[i][j]; k++) {
+          info_table[i][j+k] = 0;
+        }
       }
     }
   }
@@ -43,10 +43,10 @@ void search_low_card_wosp(int dst_cards[8][15],int info_table[8][15], int my_car
   for(j=1;j<14&&find_flag==0;j++){        
     for(i=0;i<4&&find_flag==0;i++){
       if(my_cards[i][j]==1){
-	if(info_table[4][j]==1){   // ペアが存在しない
-	  find_flag=1;
-	  dst_cards[i][j]=my_cards[i][j];
-	}
+        if(info_table[4][j]==1){   // ペアが存在しない
+          find_flag=1;
+          dst_cards[i][j]=my_cards[i][j];
+        }
       }
     }
   }
@@ -59,29 +59,25 @@ void search_low_card_wosp(int dst_cards[8][15],int info_table[8][15], int my_car
 
 void make_info_table(int info_table[8][15], int info_j_table[8][15], int my_cards[8][15])
 {
-  int cnt, i, j, zero_mark;
+  int i, j, zero_mark;
   clear_table(info_table);
   clear_table(info_j_table);
 
   // for sequence
   for(i=0;i<4;i++){
-    cnt=0;
     for(j=13;j>=1;j--){
-      if (info_table[i][j]==0) {
-        cnt = 0;
-      }
-      cnt += my_cards[i][j];
-      info_table[i][j] = cnt;
-      if (info_table[i][j] == 2) {
-        info_table[i][j] = 1;
+      if (my_cards[i][j] == 0) {
+        info_table[i][j] = 0;
+      } else {
+        info_table[i][j] = info_table[i][j+1] + 1;
       }
     }
   }
   
-  // for pair 
+  // pair 
   for(i=1;i<=13;i++){
     for(j=0;j<4;j++){
-      info_table[4][i]+=(my_cards[j][i]>0);
+      info_table[4][i]+=my_cards[j][i];
     }
   }
 
@@ -93,7 +89,7 @@ void make_info_table(int info_table[8][15], int info_j_table[8][15], int my_card
     }
 
     // sequence
-    for (i=0; i<=3; i++) {
+    for (i=0; i<4; i++) {
       zero_mark = 14;
       for (j=13; j>=1; j--) {
         if (info_table[i][j] == 0) {
@@ -106,6 +102,13 @@ void make_info_table(int info_table[8][15], int info_j_table[8][15], int my_card
     }
   }
 
+  for (i=0; i<4; i++) {
+    for (j=1; j<=13; j++) {
+      printf("%d ", info_table[i][j]);
+    }
+    printf("\n");
+  }
+  printf("***************************\n");
 }
 
 int search_low_pair(int dst_cards[8][15],int info_table[8][15],int my_cards[8][15])

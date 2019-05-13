@@ -50,13 +50,13 @@ void select_cards_free(int select_cards[8][15], int my_cards[8][15], state *fiel
   int submit = 0;
 
   make_info_table(info_table, info_j_table, my_cards);
-  
-  if (submit == 0) {
-    submit = search_low_sequence_wj(select_cards, info_j_table, my_cards);
-  }
 
   if (submit == 0) {
     submit = search_low_sequence(select_cards, info_table, my_cards);
+  }
+
+  if (submit == 0) {
+    submit = search_low_sequence_wj(select_cards, info_j_table, my_cards);
   }
 
   if (submit == 0) {
