@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>課題No.4</title>
+    <script type="text/javascript">
+      <!-- 縮小中か通常状態かをグローバル変数で保存しておく. -->
+      is_shrinked = 0;
+      function resize() {
+        if (is_shrinked == 0) {
+          <!-- 通常中なので縮小する. -->
+          document.images["img1"].width /= 2;
+          document.images["img1"].height /= 2;
+	  <!-- 縮小中の状態を保存しておく. -->
+          is_shrinked = 1;
+        } else {
+	  <!-- 縮小中なので拡大する -->  
+          document.images["img1"].width *= 2;
+          document.images["img1"].height *= 2;
+	  <!-- 通常状態を保存しておく -->
+          is_shrinked = 0;
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <img src="img1.png" name="img1" onClick="resize();" width="640" height="480" >
+  </body>
+</html>
