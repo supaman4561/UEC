@@ -3,33 +3,31 @@
     <title>課題No.1</title>
     <script type="text/javascript">
       function alertWeek() {
-        <!-- HTMLソースから開始日と終了日の情報を抽出 -->
-	var start_y = document.forms.id_date.start_y.value;
-	var start_m = document.forms.id_date.start_m.value;
-	var start_d = document.forms.id_date.start_d.value;
-	var end_y = document.forms.id_date.end_y.value;
-	var end_m = document.forms.id_date.end_m.value;
-	var end_d = document.forms.id_date.end_d.value;
+        /* HTMLソースから開始日と終了日の情報を抽出 */
+				var start_y = document.forms.id_date.start_y.value;
+				var start_m = document.forms.id_date.start_m.value;
+				var start_d = document.forms.id_date.start_d.value;
+				var end_y = document.forms.id_date.end_y.value;
+				var end_m = document.forms.id_date.end_m.value;
+				var end_d = document.forms.id_date.end_d.value;
 
-        <!-- 開始日と終了日によってDateオブジェクトを作成 -->
-	var start_date = new Date (start_y, start_m-1, start_d);
-	var end_date = new Date (end_y, end_m-1, end_d);
+				/* 開始日と終了日によってDateオブジェクトを作成 */
+				var start_date = new Date (start_y, start_m-1, start_d);
+				var end_date = new Date (end_y, end_m-1, end_d);
 
-	<!-- 終了日と開始日の差分を取る. 日数計算をしたいので
-	     1日=86400秒=86400000ミリ秒で割っている. その後計算した値の
-	     整数部だけを取得すれば日数を取得できる.
-	  -->
-	var sub_date = parseInt((end_date - start_date)/86400000);
-	<!-- 1週は7日なので差分の日数を7で割り, 整数部を取得することにより
-	     差分の週数を取得する.
-	  -->
-	var sub_week = parseInt(sub_date / 7);
-	<!-- 差分の日数はマイナスも取りうるのでそのときは0とする. -->
-	if (sub_week < 0) {
-	  sub_week = 0;
-	}
-	<!-- アラートで表示 -->
-	window.alert("経過週数：" + sub_week + "週です.");
+				/* 終了日と開始日の差分を取る. 日数計算をしたいので
+						1日=86400秒=86400000ミリ秒で割っている. その後計算した値の
+						整数部だけを取得すれば日数を取得できる. */
+				var sub_date = parseInt((end_date - start_date)/86400000);
+				/* 1週は7日なので差分の日数を7で割り, 整数部を取得することにより
+						差分の週数を取得する. */
+				var sub_week = parseInt(sub_date / 7);
+				/* 差分の日数はマイナスも取りうるのでそのときは0とする. */
+				if (sub_week < 0) {
+					sub_week = 0;
+				}
+				/* アラートで表示 */
+				window.alert("経過週数：" + sub_week + "週です.");
       }
     </script>
   </head>

@@ -3,28 +3,28 @@
     <title>課題No.3</title>
     <script type="text/javascript">
       function makeExpTable() {
-        <!-- HTMLソースから値を取得 -->
+        /* HTMLソースから値を取得 */
         var n = document.forms.id_number.id_n.value;
         var m = document.forms.id_number.id_m.value;
 	
-	<!-- 表のタグ部分を作成 -->
+	      /* 表のタグ部分を作成 */
         var tag = "<tr><td>べき数</td>" +
                       "<td>"+n+"</td>" +
-	              "<td>"+m+"</td>" +
+	                    "<td>"+m+"</td>" +
                       "<td>Sum</td></tr>";
 
-	<!-- 表の要素を作成. べき乗はES2016より追加されたExponentiation Operatorを使用. -->
+	      /* 表の要素を作成. べき乗はES2016より追加されたExponentiation Operatorを使用. */
         var element = "";
         for (i=0; i<=5; i++) {	      
-	  element += "<tr><td>" + i + "</td>" +
-	                 "<td>" + n**i + "</td>" +
+	        element += "<tr><td>" + i + "</td>" +
+	                       "<td>" + n**i + "</td>" +
                          "<td>" + m**i + "</td>" +
-	      	         "<td>" + (n**i+m**i) + "</td></tr>"; 
-	}
+	      	               "<td>" + (n**i+m**i) + "</td></tr>"; 
+	      }
 
-	<!-- HTMLに表を埋め込む -->
-	document.getElementById("id_exp_table").innerHTML = "<table border=1>" +
-			                                    tag + element + "</table>";
+        /* HTMLに表を埋め込む */
+        document.getElementById("id_exp_table").innerHTML = "<table border=1>" +
+                                                tag + element + "</table>";
       }
     </script>
   </head>

@@ -3,24 +3,23 @@
     <title>課題No.2</title>
     <script type="text/javascript">
       function keywordCntAndRmv() {
-        <!-- 文字列を取得 -->
+        /* 文字列を取得 */
         var str = document.forms.id_str_keyword.id_str.value;
-        <!-- キーワードを取得 -->
+        /* キーワードを取得 */
         var keyword = document.forms.id_str_keyword.id_keyword.value;
         var cnt = 0;
 
-        <!-- 文字列にキーワードが含まれているかを確認する.  -->
+        /* 文字列にキーワードが含まれているかを確認する.  */
         while((index = str.indexOf(keyword, 0)) != -1) {
-          <!-- 文字列にキーワードが含まれている場合このスコープに入る -->
-	  <!-- キーワードを削除する -->
-	  str = str.substring(0, index) + str.substring(index+1);
-	  <!-- キーワードが含まれていたのでカウントする -->
-	  cnt++;
+          /* 文字列にキーワードが含まれている場合このスコープに入る */
+	        /* キーワードを削除する */
+          str = str.substring(0, index) + str.substring(index+1);
+          /* キーワードが含まれていたのでカウントする */
+          cnt++;
         }
 
-	<!-- アラートにより結果を表示 -->
-	window.alert("キーワードの個数=" + cnt + "\n新たな文字列=" + str);
-      
+        /* アラートにより結果を表示 */
+        window.alert("キーワードの個数=" + cnt + "\n新たな文字列=" + str);
       }
     </script>
   </head>
