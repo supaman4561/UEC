@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <title>課題2-2</title>
+    <script type="text/javascript">
+
+      function changeColor() {
+        setInterval(setcolor, 5000);
+      }
+      
+      function setcolor() {
+        var colors = new Array("red", "yellow", "blue");
+        document.getElementById("dentsu").style.color = colors[Math.floor(Math.random() * 3)];
+      }
+
+    </script>
+  </head>
+  <body onload="changeColor();">
+    <div style="color:red;" id="dentsu">電通大</div>
+  </body>
+</html>

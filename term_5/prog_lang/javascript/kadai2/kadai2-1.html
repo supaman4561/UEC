@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>課題2-1</title>
+    <script type="text/javascript">
+      
+      /* 0~7の値をランダムに保持する配列 */
+      var randomNum = new Array(3);
+      /* 配列に0~7の値をランダムに入れる */
+      function setRandomNum() {
+        for (i=0; i<3; i++) {
+          randomNum[i] = Math.floor(Math.random() * 8);
+	}
+      }
+		     
+      /* テーブルの要素となるhtmlソースを吐き出す関数 */
+      function makeTableElement() {
+        /* テーブルの要素となるhtmlソースを作成する */	       
+	var element = "";
+	/*  生成された要素が全て同じか判定 */	       
+        if ((randomNum[0] == randomNum[1]) && (randomNum[1] == randomNum[2])) {
+	  /* 同じ場合はフォントの色を赤に指定 */
+	  var col = "red";
+        } else {
+	  var col = "black";
+        }
+	element += "<tr>";	       
+        /* 今回作成するテーブルは3列なので3回繰り返す */	       
+        for (var i=0; i<3; i++) {	       
+          element += "<td><span style='color:" + col + ";'>";
+          element += randomNum[i];
+          element += "</span></td>";
+        }
+        element += "</tr>";
+        return element; 
+      }
+		    
+      function makeOctTable() {
+        /* 表のヘッダ部分 */
+        var tableHead = "<th>8<sup>2</sup>の位</th><th>8<sup>1</sup>の位</th><th>8<sup>0</sup>の位</th>";
+        /* HTMLを埋め込んでいく */ 
+         var htmlSource = "<table border=1>" + tableHead;
+        /* 50回繰り返す */
+        for (var i=0; i<50; i++) {			      
+          setRandomNum();
+          var elm = makeTableElement();
+          htmlSource += elm;
+        }
+	htmlSource += "</table>";
+	document.getElementById("oct_table").innerHTML = htmlSource;		
+      }		      
+    </script>
+  </head>
+  <body>
+    <input type="button" value="生成" onclick="makeOctTable();">
+    <div id="oct_table"></div>
+  </body>
+</html>
