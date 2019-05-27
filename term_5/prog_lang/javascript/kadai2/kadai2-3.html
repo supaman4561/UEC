@@ -2,19 +2,24 @@
   <head>
     <title>課題2-3</title>
     <script type="text/javascript">
-
       function moveImage() {
+        // 現在の画像のleftを取得 (文字列で与えられるためparseIntでint化)
+        var left = parseInt(document.img1.style.left);
+        // 0.1秒ごとに実行
         var mi = setInterval(function() {
-          document.images["img1"].style.left += 10;
-          if (document.images["img1"].style.left >= 400) {
+          document.img1.style.left = left;
+          // leftが400pxまでいったら終了
+          if (left >= 400) {
             clearInterval(mi);
           }
+          // 10pxずつ移動
+          left += 10;
         }, 100);
       }
 
     </script>
   </head>
-  <body onload="moveImage();">
-    <img src="imgGreece1.jpg" name="img1" style="position:absolute;left:0px;top:50px">
+  <body onload="moveImage()">
+    <img id="img" src="imgGreece1.jpg" name="img1" style="position:absolute;left:0px;top:50px">
   </body>
 </html>
