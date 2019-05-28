@@ -2,12 +2,15 @@
   <head>
     <title>課題2-4</title>
     <script type="text/javascript">
+      // ウィンドウ情報を保持しておく配列を用意
       var newWindow = new Array(5);
       
+      // ウィンドウを作成する. 大きさは幅600px, 高さ400px
       function createNewWindow(url, n) {
         newWindow[n] = window.open(url, "課題2-4", "width=600, height=400");
       } 
 
+      // 指定されたウィンドウを閉じる
       function closeWindow(n) {
         newWindow[n].close();
       }
