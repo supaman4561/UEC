@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>課題2-5</title>
+    <script type="text/javascript">
+      function scrollNextPhoto() {
+        var scrollCnt = 0;
+        var idSrlNxt = setInterval(() => {
+          window.scrollBy(0,1);
+          scrollCnt += 1;
+          if (scrollCnt >= 500) {
+            clearInterval(idSrlNxt);
+          }
+        }, 5);
+      }
+
+      function scrollPreviousPhoto() {
+        var scrollCnt = 0;
+        var idSrlPrv = setInterval(() => {
+          window.scrollBy(0,-1);
+          scrollCnt += 1;
+          if (scrollCnt >= 500) {
+            clearInterval(idSrlPrv);
+          }
+        }, 5);
+      }
+
+      function scrollToTop() {
+        var yOffset = window.pageYOffset;
+        var scrollCnt = 0;
+        var idSrlTop = setInterval(() => {
+          window.scrollBy(0,-1);
+          scrollCnt += 1;
+          if (scrollCnt >= yOffset) {
+            clearInterval(idSrlTop);
+          }
+        }, 3);
+      }
+    </script>
+  </head>
+
+  <body>
+    <h1>クレタ島の風景</h1>
+    写真ごとに上下スクロール<br>
+    <img name="img1" src="imgGreece1.jpg"><br>
+    <button onclick="scrollNextPhoto()">The next photo</button><br>
+    <img name="img2" src="imgGreece2.jpg"><br>
+    <button onclick="scrollPreviousPhoto()">The previous photo</button>
+    <button onclick="scrollNextPhoto()">The next photo</button><br>
+    <img name="img3" src="imgGreece3.jpg"><br>
+    <button onclick="scrollPreviousPhoto()">The previous photo</button><br>
+    <button onclick="scrollToTop()">Top</button><br>
+  </body>
+</html>
