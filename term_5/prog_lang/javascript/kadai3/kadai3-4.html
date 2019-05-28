@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>課題3-4</title>
+    <script type="text/javascript">
+      function changeColor() {
+        for (i=0; document.colormenu.colors.length; i++) {
+          elem = document.colormenu.elements[i];
+          if (elem.checked) {
+            color = elem.value;
+            document.getElementById("target").style.color = color;
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <form name="colormenu">
+      <input type="radio" name="colors" value="red">赤<br>
+      <input type="radio" name="colors" value="blue">青<br>
+      <input type="radio" name="colors" value="yellow">黄<br>
+      <input type="radio" name="colors" value="black">黒<br>
+      <input type="radio" name="colors" value="green">緑<br>
+      <input type="button" value="文字色変更" onclick="changeColor()">
+    </form>
+    <p id="target">■■■■■</p>
+  </body>
+</html>
