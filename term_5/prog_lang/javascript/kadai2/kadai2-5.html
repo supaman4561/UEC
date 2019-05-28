@@ -2,8 +2,11 @@
   <head>
     <title>課題2-5</title>
     <script type="text/javascript">
+      // 500px下にスクロールする関数
       function scrollNextPhoto() {
+        // スクロール分を保持しておき, 500に達したら終了.
         var scrollCnt = 0;
+        // そのままだと一瞬でスクロールするので0.005秒ずつ実行
         var idSrlNxt = setInterval(() => {
           window.scrollBy(0,1);
           scrollCnt += 1;
@@ -12,9 +15,12 @@
           }
         }, 5);
       }
-
+      
+      // 500px上にスクロールする関数
       function scrollPreviousPhoto() {
+        // スクロール分を保持しておき, 500に達したら終了.        
         var scrollCnt = 0;
+        // そのままだと一瞬でスクロールするので0.005秒ずつ実行
         var idSrlPrv = setInterval(() => {
           window.scrollBy(0,-1);
           scrollCnt += 1;
@@ -24,9 +30,13 @@
         }, 5);
       }
 
+      // ページトップまでスクロールする関数
       function scrollToTop() {
+        // window.pageYOffsetにより現在の垂直位置を取得
         var yOffset = window.pageYOffset;
+        // スクロール分を保持
         var scrollCnt = 0;
+        // そのままだと一瞬なので0.003秒ずつ実行
         var idSrlTop = setInterval(() => {
           window.scrollBy(0,-1);
           scrollCnt += 1;
