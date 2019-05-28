@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>課題2-4</title>
+    <script type="text/javascript">
+      var newWindow = new Array(5);
+      
+      function createNewWindow(url, n) {
+        newWindow[n] = window.open(url, "課題2-4", "width=600, height=400");
+      } 
+
+      function closeWindow(n) {
+        newWindow[n].close();
+      }
+     </script>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td>https://www.python.org/</td>
+        <td><input type="button" value="Open" onclick="createNewWindow('https://www.python.org/', 0)"></td>
+        <td><input type="button" value="Close" onclick="closeWindow(0)"></td>
+      </tr>
+        <td>https://www.ruby-lang.org/ja/</td>
+        <td><input type="button" value="Open" onclick="createNewWindow('https://www.ruby-lang.org/ja/', 1)"></td>
+        <td><input type="button" value="Close" onclick="closeWindow(1)"></td>
+      <tr>
+        <td>https://jquery.com/</td>
+        <td><input type="button" value="Open" onclick="createNewWindow('https://jquery.com/', 2)"></td>
+        <td><input type="button" value="Close" onclick="closeWindow(2)"></td>
+      </tr>
+      <tr>
+        <td>https://jp.vuejs.org/</td>
+        <td><input type="button" value="Open" onclick="createNewWindow('https://jp.vuejs.org/', 3)"></td>
+        <td><input type="button" value="Close" onclick="closeWindow(3)"></td>  
+      </tr>
+      <tr>
+        <td>https://reactjs.org/</td>
+        <td><input type="button" value="Open" onclick="createNewWindow('https://reactjs.org/', 4)"></td>
+        <td><input type="button" value="Close" onclick="closeWindow(4)"></td>
+      </tr>
+    </table>
+  </body>
+</html>
