@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <title>課題2-6</title>
+    <script type="text/javascript">
+      function changeHobby() {
+        var hobby = document.forms.form_hobby.input_hobby.value;
+        
+        document.getElementById("hobby").innerHTML = hobby;
+        document.cookie = "hobby="+ escape(hobby) +";expires=" + expTime1W(); 
+      }
+
+      function fillContents(name, hobby, count) {
+        var name_content = document.getElementById("name");
+        var hobby_content = document.getElementById("hobby");
+        var count_content = document.getElementById("count");
+
+        name_content.innerHTML = name;
+        hobby_content.innerHTML = hobby;
+        count_content.innerHTML = count;
+      } 
+
+      function expTime1W() {
+        // 有効期限の設定
+        presentDay = new Date();
+        dd = presentDay.getDate();
+        presentDay.setDate(dd+7);
+        var expTime = presentDay.toGMTString();
+        return expTime;
+      }
+    </script>
+  </head>
+  <body>
+    <h1>ようこそ<span id="name"></span></h1>
+    <p>趣味：<span id="hobby"></span></p>
+    <p><span id="count"></span>回目</p>
+    <form id="form_hobby" onsubmit="changeHobby()">
+      趣味の変更: <input id="input_hobby" type="text"> <input type="button" value="変更" onclick="changeHobby()">
+    </form>
+    <script type="text/javascript">
+      var ck = document.cookie;
+      var cookies = {};
+      console.log(ck);
+      if (ck == "") {
+        var name = prompt("名前を入力してください");
+        var hobby = prompt("趣味を入力して下さい");
+        var count = 1;
+        
+        fillContents(name, hobby, count);
+
+        document.cookie = "name="+ escape(name) +";expires=" + expTime1W();
+        document.cookie = "hobby="+ escape(hobby) +";expires=" + expTime1W(); 
+        document.cookie = "count="+ escape(count.toString()) +";expires=" + expTime1W(); 
+      } else {
+        ck.split(";").forEach(function(elem){
+          elem = unescape(elem).trim(); 
+          [key, value] = elem.split("=");
+          cookies[key] = value;
+        });
+        cookies["count"] = (parseInt(cookies["count"]) + 1).toString();
+        document.cookie = "count="+ escape(cookies["count"]) +";expires=" + expTime1W();
+
+        fillContents(cookies["name"], cookies["hobby"], cookies["count"]);
+      } 
+    </script>    
+  </body>
+</html>
