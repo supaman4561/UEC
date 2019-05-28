@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>課題3-1</title>
+    <script>
+      function cmpIdPass() {
+        var id = document.pass_form.id.value;
+        var pass = document.pass_form.passwd.value;
+        console.log(id, pass)
+        if (id == pass) {
+          window.open('https://www.ied.inf.uec.ac.jp/support/projects/ied-support/wiki', "課題3-1");
+        } else {
+          alert('Password incorrect.');
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <form name="pass_form" onsubmit="cmpIdPass()">
+      ID : <input name="id" type="text"><br>
+      PassWord: <input name="passwd" type="password"><br>
+      <input type="submit" value="認証">
+    </form>
+  </body>
+</html>

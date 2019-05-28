@@ -1,0 +1,58 @@
+<html>
+ <head>
+  <script type="text/javascript">
+    function scrclr () {
+      for (i=0; i<document.tstform.length; i++) {
+        if (document.tstform.elements[i].type != "button") {
+          document.tstform.elements[i].value = "";
+        }
+      }
+      document.tstform.english.focus ( );
+    }
+    function showStatus () {
+      // 各教科の点数を取得
+      var engscore = parseInt(document.tstform.english.value);
+      var mathscore = parseInt(document.tstform.mathmatics.value);
+      var engstatus;
+      var mathstatus;
+      // 英語の評価を設定
+      if (engscore >= 90) {
+        engstatus = "秀";
+      } else if (engscore >= 80) {
+        engstatus = "優";
+      } else if (engscore >= 70) {
+        engstatus = "可";
+      } else {
+        engstatus = "不可";
+      }
+
+      // 数学の評価を設定
+      if (mathscore >= 90) {
+        mathstatus = "秀";
+      } else if (mathscore >= 80) {
+        mathstatus = "優";
+      } else if (mathscore >= 70) {
+        mathstatus = "可";
+      } else {
+        mathstatus = "不可";
+      }
+      
+      // 各教科の評価を記載
+      document.getElementById("engstatus").innerHTML = engstatus;
+      document.getElementById("mathstatus").innerHTML = mathstatus;
+    }
+  </script>
+ </head>
+
+ <body onload = "scrclr()">
+  <form name = "tstform">
+    英語の点数：<input type = "text" name = "english" size = 3>点
+    数学の点数：<input type = "text" name = "mathmatics" size = 3>点
+    <input type = "button" onclick = "showStatus()" value = "評価">
+    <input type = "button" onclick = "scrclr()" value = "キャンセル">
+  </form>
+  <p>英語の評価：<span id="engstatus"></span></p>
+  <p>数学の評価：<span id="mathstatus"></span></p>
+ </body>
+
+</html>
