@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>2019年残り時間</title>
+  </head>  
+  <body>
+    <div>
+      <p> <span id="date"></span> 日</p>
+      <p> <span id="hour"></span> 時間</p>
+      <p> <span id="second"></span> 秒</p>
+    </div>
+    <input type="button" value="close" onclick="window.close()">
+    <script type="text/javascript">
+      var now = new Date();
+      var target = new Date(2020, 0, 1);
+      var diff = target - now;
+      var sec = diff / 1000;
+      var hour = sec / 3600;
+      var date = hour / 24;
+      document.getElementById("date").innerHTML = Math.round(date);
+      document.getElementById("hour").innerHTML = Math.round(hour);
+      document.getElementById("second").innerHTML = Math.round(sec);
+    </script>
+  </body>
+</html>

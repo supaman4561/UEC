@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>カウンター</title>
+    <script type="text/javascript">
+      var count=0;
+      function countUp() {
+        count += 1;
+        document.getElementById("counter").innerHTML = count;
+      }
+    </script>
+  </head>
+  <body>
+    <div id="counter">0</div>
+    <input type="button" value="count" onclick="countUp()"><br>
+    <input type="button" value="close" onclick="window.close()">
+  </body>
+</html>

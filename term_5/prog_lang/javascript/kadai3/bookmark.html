@@ -1,0 +1,25 @@
+<html>
+ <head>
+  <script type="text/javascript">
+    function pmove(){
+      var selected = document.bkmkmenu.bkmks.selectedIndex;
+      if (selected > 0) {
+      window.open (document.bkmkmenu.bkmks.options[selected].value);
+      }
+    }
+  </script>
+ </head>
+ <body>
+  <form name = "bkmkmenu">
+   <select name ="bkmks" onchange = "pmove()">
+    <option>ブックマーク集
+    <option value = "http://www.uec.ac.jp">電気通信大学
+    <option value = "http://www.uec.ac.jp/department/ie/j/">電気通信大学情報理工学部総合情報学科
+    <option value = "https://www.python.org/">python.org
+    <option value = "http://www.google.co.jp">検索エンジン:google
+    <option value = "http://www.amazon.co.jp">amazon.co.jp
+    </select>
+  </form>
+  <input type="button" value="close" onclick="window.close()">
+ </body>
+</html>

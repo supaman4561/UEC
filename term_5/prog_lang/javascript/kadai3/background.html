@@ -1,0 +1,14 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <input type="button" value="close" onclick="window.close()">
+    <script type="text/javascript">
+      var colors = ["red", "blue", "green", "white", "black", "yellow"]
+      idChangeColor = setInterval (() => {
+        col_index = Math.floor(Math.random() * colors.length);
+        document.body.style.background = colors[col_index];  
+      }, 3000);
+    </script>
+  </body>
+</html>

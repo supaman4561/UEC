@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <title>課題3-5</title>
+    <script type="text/javascript">
+      function openWindow() {
+        var selected = document.form_pages.pages.selectedIndex;
+        window.open(document.form_pages.pages.options[selected].value);
+      }
+    </script>
+  </head>
+  <body>
+    <form name="form_pages">
+      <select name="pages" size="4" onchange="openWindow()">
+        <option value="bookmark.html">ブックマーク
+        <option value="time2019.html">2019年の残り時間
+        <option value="background.html">ランダム背景色
+        <option value="counter.html">カウンター
+      </select>
+    </form>
+  </body>
+</html>
