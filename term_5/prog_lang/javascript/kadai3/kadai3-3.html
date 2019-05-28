@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>課題3-3</title>
+    <script type="text/javascript">
+      function showImg() {
+        // 選ばれている対象のindexを取得, 選ばれていない場合は-1を返す.
+        var selected = document.imgmenu.imgs.selectedIndex;
+        // 選ばれていた時
+        if (selected >= 0) {
+          // 画像を表示する要素を選択
+          var imgtag = document.getElementById("showimg");
+          // 画像を埋め込み
+          imgtag.innerHTML = "<img src="+ 
+                              document.imgmenu.imgs.options[selected].value +
+                              ">";
+        }
+      }
+    </script>
+  </head>
+  <body onload="showImg()">
+    <form name="imgmenu">
+      <select name="imgs" size="3" onchange="showImg()">
+        <option value="imgGreece1.jpg" selected="selected">Image1
+        <option value="imgGreece2.jpg">Image2
+        <option value="imgGreece3.jpg">Image3
+      </select>
+    </form>
+    <div id="showimg"></div>
+  </body>
+</html>
