@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      var challenge = 0;  // チャレンジ回数
+      var point = 0;  // 獲得ポイント
+      var pushButtonFlag = 1;  // ボタンを押したかのフラグ
+      var correct = 0;  // 正解回数
+
+      // startボタンが押されたときに呼び出される. ゲームを開始する.
+      function startGame() {
+        // challenge回数が0以外の場合はゲーム中なので実行されないようにする.
+        if (challenge == 0) {
+          challenge = 20;  // チャレンジ回数を初期化
+          point = 0;  // ポイントを初期化
+          correct = 0;  // 正解回数を初期化
+          document.getElementById('marker').style.left = 20 + correct * 29;  // マーカー位置の初期化
+          // 1秒に一回呼び出し
+          idGame = setInterval(() => {
+            document.getElementsByName('start')[0].value = challenge;
+            pushButtonFlag = 0;  // ボタンフラグを下げる
+            changeValues();  // ボタンの値を1〜100でランダムに変更する.            
+            console.log(challenge, point, correct);
+            challenge  = challenge - 1;  // チャレンジ回数を1減少する.
+            if (challenge < 0) {  // チャレンジ回数がなくなったらゲームを終了する.
+              clearInterval(idGame);
+              pushButtonFlag = 1;  // フラグを立たせる
+              challenge = 0;  // チャレンジ回数を0にしておく(startボタンが押されたら反応するように)
+              document.getElementsByName('start')[0].value = "start";  // スタートボタンの表示を初期化
+              for (var i=0; i<5; i++) {  // ボタンの表示を初期化
+                document.g_switch.elements[i].value = "SW" + (i+1);
+              }          
+            }
+          }, 1000);
+        }
+      }
+
+      // ボタンの値を1〜100でランダムに変更する.
+      function changeValues() {
+        // 5つのボタンに適用
+        for (var i=0; i<5; i++) {
+          document.g_switch.elements[i].value = Math.floor(Math.random() * 100) + 1;
+        }
+      }
+
+      // ボタンが押されたときに呼び出される. bnumは押されたボタンを識別するために用意している.
+      function buttonClick(bnum) {
+        // まだボタンが押されていない(一定期間内で)
+        if (pushButtonFlag == 0) {
+          pushButtonFlag = 1;  // ボタンを押した
+          var maxIndex = 0;
+
+          for (var i=1; i<5; i++) {
+            // 最大値のボタンの番号をゲット
+            // string型で返ってくるのでint型に整形
+            var maxIndexValue = parseInt(document.g_switch.elements[maxIndex].value);
+            var iValue = parseInt(document.g_switch.elements[i].value);  
+            if ( maxIndexValue < iValue ) {
+              maxIndex = i;
+            }
+          }
+
+          if (maxIndex == bnum) {  // 最大値のボタンを押した
+            point += parseInt(document.g_switch.elements[bnum].value);
+            correct += 1;
+          } else {  // 最大値以外のボタンを押した
+            point -= parseInt(document.g_switch.elements[bnum].value);
+          }
+
+          document.getElementById('point').innerHTML = point;
+          // 20pxが初期値, 600pxがゴール. 29pxずつleftの位置をずらしていけば
+          // 成功回数が20回(最大値)になったところで位置が600pxになる.
+          document.getElementById('marker').style.left = 20 + correct * 29;
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <!-- スタートボタン -->
+    <input type="button" name="start" value="start" style="width:500px;" onclick="startGame();">
+    <!-- ゲーム用のボタン(5つ) -->
+    <form name="g_switch">
+      <!-- 各ボタンはクリックされたときにbuttonClick([そのボタンの番号]);を呼び出す -->
+      <input type="button" name="gs_1" value="SW1" style="width:100px; height:50px; font-size:20px;" onclick="buttonClick(0);">
+      <input type="button" name="gs_2" value="SW2" style="width:100px; height:50px; font-size:20px;" onclick="buttonClick(1);">
+      <input type="button" name="gs_3" value="SW3" style="width:100px; height:50px; font-size:20px;" onclick="buttonClick(2);">
+      <input type="button" name="gs_4" value="SW4" style="width:100px; height:50px; font-size:20px;" onclick="buttonClick(3);">
+      <input type="button" name="gs_5" value="SW5" style="width:100px; height:50px; font-size:20px;" onclick="buttonClick(4);">
+    </form>
+    <!-- 獲得ポイントを表示 -->
+    <div style="text-decoration: underline">取得ポイント: <span id="point">0</span>点</div>
+    <!-- 成功回数をバーで表示, 絶対位置で上から300pxのところに表示 -->
+    <div style="position:absolute; top:300px;">
+      成功回数：<br>
+      <img src="./correctbar.png">
+    </div>
+    <!-- markerを表示. 20pxがスタート, 600pxがゴール. 上から345pxのところに表示するとちょうどいい. -->
+    <div id="marker" style="font-size:30px; position:absolute; top:345px; left:20px">■</div>
+  </body>
+</html>
