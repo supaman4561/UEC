@@ -4,9 +4,13 @@
   <body>
     <input type="button" value="close" onclick="window.close()">
     <script type="text/javascript">
-      var colors = ["red", "blue", "green", "white", "black", "yellow"]
+      // 色のセット
+      var colors = ["red", "blue", "green", "white", "black", "yellow"];
+      // 3秒に一回コールされる
       idChangeColor = setInterval (() => {
+        // ランダムに色のインデックスを選択
         col_index = Math.floor(Math.random() * colors.length);
+        // 色の変更
         document.body.style.background = colors[col_index];  
       }, 3000);
     </script>

@@ -3,11 +3,13 @@
     <title>課題3-4</title>
     <script type="text/javascript">
       function changeColor() {
+        // ラジオボタンの要素を走査
         for (i=0; document.colormenu.colors.length; i++) {
           elem = document.colormenu.elements[i];
+          // チェックされていたら
           if (elem.checked) {
-            color = elem.value;
-            document.getElementById("target").style.color = color;
+            color = elem.value;  // 色を決定
+            document.getElementById("target").style.color = color;  // 対象の文字の色を変更
           }
         }
       }

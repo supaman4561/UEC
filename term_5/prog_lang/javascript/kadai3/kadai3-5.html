@@ -3,13 +3,16 @@
     <title>課題3-5</title>
     <script type="text/javascript">
       function openWindow() {
+        // 選ばれているインデックスを獲得
         var selected = document.form_pages.pages.selectedIndex;
+        // 選ばれているhtmlを新しいwindowで開く
         window.open(document.form_pages.pages.options[selected].value);
       }
     </script>
   </head>
   <body>
     <form name="form_pages">
+      <!-- onchangeイベントの発火でopenWindow()がコールされる -->
       <select name="pages" size="4" onchange="openWindow()">
         <option value="bookmark.html">ブックマーク
         <option value="time2019.html">2019年の残り時間

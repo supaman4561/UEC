@@ -3,6 +3,7 @@
     <title>カウンター</title>
     <script type="text/javascript">
       var count=0;
+      // カウントを増やす
       function countUp() {
         count += 1;
         document.getElementById("counter").innerHTML = count;
@@ -11,7 +12,9 @@
   </head>
   <body>
     <div id="counter">0</div>
+    <!-- このボタンを押すとカウントが1増える -->
     <input type="button" value="count" onclick="countUp()"><br>
+    <!-- 閉じる用ボタン -->
     <input type="button" value="close" onclick="window.close()">
   </body>
 </html>

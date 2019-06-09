@@ -2,15 +2,19 @@
  <head>
   <script type="text/javascript">
     function pmove(){
+      // 選ばれているインデックスを獲得
       var selected = document.bkmkmenu.bkmks.selectedIndex;
+      // 選ばれている場合はインデックスが0以上になる
       if (selected > 0) {
-      window.open (document.bkmkmenu.bkmks.options[selected].value);
+        // 対象のURLを開く
+        window.open (document.bkmkmenu.bkmks.options[selected].value);
       }
     }
   </script>
  </head>
  <body>
   <form name = "bkmkmenu">
+   <!-- onchangeイベントが発火するとpmove()がコールされる -->
    <select name ="bkmks" onchange = "pmove()">
     <option>ブックマーク集
     <option value = "http://www.uec.ac.jp">電気通信大学

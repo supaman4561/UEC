@@ -8,14 +8,16 @@
       <p> <span id="hour"></span> 時間</p>
       <p> <span id="second"></span> 秒</p>
     </div>
+    <!-- 閉じる用ボタン -->
     <input type="button" value="close" onclick="window.close()">
     <script type="text/javascript">
-      var now = new Date();
-      var target = new Date(2020, 0, 1);
-      var diff = target - now;
-      var sec = diff / 1000;
-      var hour = sec / 3600;
-      var date = hour / 24;
+      var now = new Date();  // 現在の時刻
+      var target = new Date(2020, 0, 1);  // 2020年1月1日の時刻
+      var diff = target - now;  // 2020年元旦までの差分を獲得
+      var sec = diff / 1000;  // 秒
+      var hour = sec / 3600;  // 時間
+      var date = hour / 24;   // 日にち
+      // 秒, 時間, 日にちをhtmlに反映
       document.getElementById("date").innerHTML = Math.round(date);
       document.getElementById("hour").innerHTML = Math.round(hour);
       document.getElementById("second").innerHTML = Math.round(sec);
