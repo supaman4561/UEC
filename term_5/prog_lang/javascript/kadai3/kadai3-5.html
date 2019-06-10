@@ -6,7 +6,9 @@
         // 選ばれているインデックスを獲得
         var selected = document.form_pages.pages.selectedIndex;
         // 選ばれているhtmlを新しいwindowで開く
-        window.open(document.form_pages.pages.options[selected].value);
+        window.open(document.form_pages.pages.options[selected].value,
+                    document.form_pages.pages.options[selected].name,
+                    "width=800,height=800");
       }
     </script>
   </head>
@@ -14,10 +16,10 @@
     <form name="form_pages">
       <!-- onchangeイベントの発火でopenWindow()がコールされる -->
       <select name="pages" size="4" onchange="openWindow()">
-        <option value="bookmark.html">ブックマーク
-        <option value="time2019.html">2019年の残り時間
-        <option value="background.html">ランダム背景色
-        <option value="counter.html">カウンター
+        <option name="ブックマーク" value="kadai3-5-1.html">ブックマーク
+        <option name="2019年の残り時間" value="kadai3-5-2.html">2019年の残り時間
+        <option name="ランダム背景色" value="kadai3-5-3.html">ランダム背景色
+        <option name="カウンター" value="kadai3-5-4.html">カウンター
       </select>
     </form>
   </body>
