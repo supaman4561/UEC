@@ -1,0 +1,96 @@
+\documentclass[a4J, 12pt]{jsarticle}
+\usepackage{additional}
+
+\title{プログラミング言語実験 javascript編\\課題5レポート}
+\author{s1710730\\須藤敬仁}
+\date{}
+
+\begin{document}
+\maketitle
+%=====================================%
+\section{生命体の消滅}
+5*5の正方形の対角線となるように生命体が存在している場合、3世代目で生命体が消滅する.
+例えば図\ref{fig:life}の様な初期状態は3世代目ですべての生命体が消滅する.
+\begin{figure}[tb] 
+    \centering
+    \begin{tabular}{|p{1em}|p{1em}|p{1em}|p{1em}|p{1em}|} \hline    
+        ● & & & & \\ \hline
+        & ● & & & \\ \hline
+        & & ● & & \\ \hline
+        & & & ● & \\ \hline
+        & & & & ● \\ \hline
+    \end{tabular}
+    \caption{3世代目で生命体が消滅する初期状態の例}
+    \label{fig:life}
+\end{figure}
+%=====================================%
+\section{繰り返し}
+%-------------------------------------%
+\subsection{横3つもしくは縦3つの生命体がある場合}
+横3つと縦3つの中央の生命体を軸として90度回転を繰り返すような状態が存在する. ただし、端
+に存在していて回転の余地が無い場合は消滅する. 例を図\ref{fig:repeat1_1}, \ref{fig:repeat1_2}に示す.
+\begin{figure}[tbp]
+    \centering
+    \begin{tabular}{cc}
+        \begin{minipage}[c]{0.5\hsize}
+            \centering
+            \begin{tabular}{|p{1em}|p{1em}|p{1em}|p{1em}|p{1em}|} \hline
+                & & & & \\ \hline
+                & ● & ● & ● & \\ \hline
+                & & & & \\ \hline
+                & & & & \\ \hline
+                & & & & \\ \hline
+            \end{tabular}
+            \caption{繰り返しの例1:奇数状態}
+            \label{fig:repeat1_1}
+        \end{minipage}
+        %
+        \begin{minipage}[c]{0.5\hsize}
+            \centering
+            \begin{tabular}{|p{1em}|p{1em}|p{1em}|p{1em}|p{1em}|} \hline
+                & & ● & & \\ \hline
+                & & ● & & \\ \hline
+                & & ● & & \\ \hline
+                & & & & \\ \hline
+                & & & & \\ \hline
+            \end{tabular}
+            \caption{繰り返しの例1:偶数状態}
+            \label{fig:repeat1_2}
+        \end{minipage}
+    \end{tabular}
+\end{figure}
+
+%-------------------------------------%
+\subsection{正方形の4辺の中央に3つ生命体が並んでいる場合}
+図\ref{fig:repeat2_1}と図\ref{fig:repeat2_2}は繰り返す.
+\begin{figure}[tbp]
+    \centering
+    \begin{tabular}{cc}
+        \begin{minipage}[c]{0.5\hsize}
+            \centering
+            \begin{tabular}{|p{1em}|p{1em}|p{1em}|p{1em}|p{1em}|} \hline
+                  & ● & ● & ● & \\ \hline
+                ● &   &   &   & ● \\ \hline
+                ● &   &   &   & ● \\ \hline
+                ● &   &   &   & ● \\ \hline
+                  & ● & ● & ● & \\ \hline
+            \end{tabular}
+            \caption{繰り返しの例2:奇数状態}
+            \label{fig:repeat2_1}
+        \end{minipage}
+        %
+        \begin{minipage}[c]{0.5\hsize}
+            \centering
+            \begin{tabular}{|p{1em}|p{1em}|p{1em}|p{1em}|p{1em}|} \hline
+                  & ● & ● & ● & \\ \hline
+                ● &   & ● &   & ● \\ \hline
+                ● & ● &   & ● & ● \\ \hline
+                ● &   & ● &   & ● \\ \hline
+                  & ● & ● & ● & \\ \hline
+            \end{tabular}
+            \caption{繰り返しの例2:偶数状態}
+            \label{fig:repeat2_2}
+        \end{minipage}
+    \end{tabular}
+\end{figure}
+\end{document}

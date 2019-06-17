@@ -1,0 +1,130 @@
+﻿\usepackage[dvipdfmx]{graphicx}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{subcaption}
+\usepackage{tikz}
+  \usetikzlibrary{calc}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{xcolor}
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+% \usepackage{ascmac}
+\usepackage{environ}
+% \usepackage[bold, expert, uplatex]{otf}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{multirow,multicol,bigdelim}
+\usepackage{flafter}
+\usepackage{here}
+\usepackage{mdframed}
+\usepackage{listings}
+\renewcommand{\lstlistingname}{code}
+%ここからソースコードの表示に関する設定
+\lstset{
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\smallitshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+	breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-1.5ex
+}
+%ここまでソースコードの表示に関する設定
+
+% 図のフォルダのパス
+\graphicspath{{./fig/hidden_markov_model/}{./fig/factorial_hidden_markov_models/}{./fig/method/}}
+
+% フレームの定義
+\definecolor{shadecolor}{gray}{0.85}
+
+\mdfdefinestyle{GrayBack}{
+	skipabove=.75\baselineskip,
+	skipbelow=.1\baselineskip,
+	roundcorner=1ex,
+	frametitlerule=true,
+	frametitlefont=\bfseries,
+	frametitlebackgroundcolor=shadecolor,
+	frametitleaboveskip=1ex,
+	frametitlebelowskip=1ex,
+	suppressfirstparskip=false,
+	innertopmargin=1ex,
+	innerleftmargin=.75em,
+	innerrightmargin=.75em,
+	innerbottommargin=1ex,
+	splitbottomskip=1ex,
+	splittopskip=2ex	}
+\newmdenv[style=GrayBack]{GrayBackFrame}
+\newenvironment{myframe}[1]{\begin{GrayBackFrame}[frametitle={#1}]}{\end{GrayBackFrame}}
+
+
+\NewEnviron{sqbrrotnbr}[1]{
+	\par\vspace{0.5\baselineskip}\noindent
+	\begin{tikzpicture}
+  	\node (body) [
+    	text justified,
+    	text width=\textwidth-4pt-2ex,
+    	inner sep=0pt,
+  	] {\BODY};
+  	\draw [
+    	line width=1pt,
+    	black,
+  	] ($(body.south east)+( 5pt, 4pt)$) |-
+  	($(body.south)     +( 0pt,-5pt)$) -|
+  	($(body.south west)+(-5pt, 4pt)$)
+  	($(body.north west)+(-5pt, 0pt)$) |-
+  	($(body.north)     +( 0pt,+9pt)$) -|
+  	($(body.north east)+( 5pt, 0pt)$);
+  	\node [black,fill=white] at ($(body.north west)+(35pt,10pt)$) {\sffamily\bfseries #1};
+	\end{tikzpicture}
+	\par\vspace{0.25\baselineskip}
+}
+
+\newenvironment{sqbrrotbr}[1]{
+	\par\vspace{0.5\baselineskip}
+	\begin{tcolorbox}[
+		blank,
+		breakable,
+		parbox=false,
+		top=5pt,
+		left=5pt,
+		bottom=5pt,
+		right=5pt,
+		overlay first={
+			\draw[
+  			black,
+  			line width=0.5pt,
+			] ($(interior.north west)+( 0pt,-5pt)$) |-
+			($(interior.north)     +( 0pt, 4pt)$) -|
+			($(interior.north east)+( 0pt,-5pt)$);
+			\node [black,fill=white] at ($(interior.north west)+(40pt, 4pt)$) {\sffamily\bfseries #1};
+		},
+		overlay last={
+			\draw[
+  			black,
+  			line width=0.5pt,
+			] ($(interior.south east)+( 0pt,10pt)$) |-
+			($(interior.south)     +( 0pt, 0pt)$) -|
+			($(interior.south west)+( 0pt,10pt)$);},
+		]{#1}
+	}{
+\end{tcolorbox}
+\par\vspace{0.5\baselineskip}
+}
+
+% argmax，argminの定義
+\newcommand{\argmax}{\operatornamewithlimits{argmax}}
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+
+% 条件付き独立の記号
+\newcommand{\indep}{\mathop{\perp\!\!\!\!\!\perp}}

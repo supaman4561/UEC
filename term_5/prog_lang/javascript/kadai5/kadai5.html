@@ -2,41 +2,40 @@
   <head>
     <title>課題5</title>
     <script type="text/javascript">
-      // 生命体が存在するかの情報
-      let lifes = new Array(5);
+      // 生命体が存在するかの情報, 5*5の配列にすると隅っこの処理が面倒になるので7*7の大きさをもたせる.
+      let lifes = new Array(7);
       for (let i=0; i<lifes.length; i++) {
-        lifes[i] = new Array(5).fill(false);  
+        lifes[i] = new Array(7).fill(false);  
       }  
       
       let startFlag = false;  // シミュレーションが開始しているかのフラグ
 
-      function setLife(numBtn) {
+      function setLife(numBtn) {  // numBtnは1~25の値を取る
         if (!startFlag) {  // シミュレーションが開始していない
           // true,falseを反転
-          let index = numBtn - 1;
-          let y = parseInt((numBtn-1) / 5);
-          let x = parseInt((numBtn-1) % 5);
+          let index = numBtn-1;
+          let y = parseInt(index / 5) + 1;  // 1~5
+          let x = parseInt(index % 5) + 1;  // 1~5
           
           lifes[y][x] = !lifes[y][x];
 
-          setColor(x, y);           
+          setColor(x, y);
         }
       }
 
       function setColor(x, y) {
         if (lifes[y][x]) {  // true
           // 背景色を緑にする
-          document.getElementsByClassName("btn-" + (y+1) + "-" + (x+1))[0].style.background = "green";
+          document.getElementsByClassName("btn-" + (y) + "-" + (x))[0].style.background = "green";
         } else {  // false 
           // 背景色を白にする
-          document.getElementsByClassName("btn-" + (y+1) + "-" + (x+1))[0].style.background = "white";
+          document.getElementsByClassName("btn-" + (y) + "-" + (x))[0].style.background = "white";
         }
       }
 
       function startSimulation() {
-        startFlag = true;
+        startFlag = true;  // シミュレーションを開始
         let cntGeneration = 0;
-        // 配列の値渡し
         idSimulation = setInterval(() => {
           if (!progGeneration()) {
             clearInterval(idSimulation);
@@ -46,14 +45,23 @@
         }, 1000);
       }
 
+      /* 世代を進める */
       function progGeneration() {
         // 配列の値渡し
-        const tmpLifes = new Array(5);
-        for (let i=0; i<5; i++) {
+        const tmpLifes = new Array(7);
+        for (let i=0; i<7; i++) {
           tmpLifes[i] = Array.from(lifes[i]);
         }
-        for (let y=0; y<5; y++) {
-          for (let x=0; x<5; x++) {
+
+        /*
+          生命体の誕生・消滅のルール
+          1. 生命体が存在していないマスで，隣接するマス（縦・横・斜めの最大８カ所）に
+             ３つ生命体が存在する時，次の世代では新たに生命体が誕生する．
+          2. 生命体が存在しているマスで，隣接するマスの生命体の数が１つ以下，
+             もしくは４つ以上のとき，その生命体は次の世代で消滅する．
+        */
+        for (let y=1; y<=5; y++) {
+          for (let x=1; x<=5; x++) {
             const numAroundLifes = cntAroundLife(tmpLifes, x, y);
             if (lifes[y][x] == true) {
               if (numAroundLifes <= 1 || numAroundLifes >= 4) {
@@ -67,9 +75,9 @@
           }
         }
 
-        let cntAlive = 0;
-        for (let x=0; x<5; x++) {
-          for(let y=0; y<5; y++) {
+        let cntAlive = 0;  // 生命体が存在している数
+        for (let x=1; x<=5; x++) {
+          for(let y=1; y<=5; y++) {
             setColor(x, y);
             if (lifes[y][x]) {
               cntAlive += 1;
@@ -77,6 +85,7 @@
           }
         }
 
+        // 生命体が存在しているとtrueを返す
         if (cntAlive > 0) {
           return true;
         }
@@ -89,9 +98,9 @@
         // 全ての要素の周りの8要素を走査  
         for (let i=-1; i<=1; i++) {
           for (let j=-1; j<=1; j++) {
-            let _y = y+i;  // 探索する行
-            let _x = x+j;  // 探索する列
-            if (_y >= 0 && _y < 5 && _x >= 0 && _x < 5 && !(i==0 && j==0)) {  // 範囲外と自分自身を除く
+            let _y = y+i;  // 探索する行要素
+            let _x = x+j;  // 探索する列要素
+            if (!(i==0 && j==0)) {  // 自分自身を除く
               if (tmpLifes[_y][_x] == true) {
                 cntLife += 1;
               }
