@@ -12,17 +12,18 @@
 
       function setLife(numBtn) {  // numBtnは1~25の値を取る
         if (!startFlag) {  // シミュレーションが開始していない
-          // true,falseを反転
           let index = numBtn-1;
           let y = parseInt(index / 5) + 1;  // 1~5
           let x = parseInt(index % 5) + 1;  // 1~5
           
+          // true,falseを反転
           lifes[y][x] = !lifes[y][x];
 
           setColor(x, y);
         }
       }
 
+      // 生命体の存在を示すために背景色を変更する
       function setColor(x, y) {
         if (lifes[y][x]) {  // true
           // 背景色を緑にする
@@ -33,14 +34,16 @@
         }
       }
 
+      // シミュレーションを開始する
       function startSimulation() {
-        startFlag = true;  // シミュレーションを開始
-        let cntGeneration = 0;
+        startFlag = true;  // シミュレーション開始フラグを立てる
+        let cntGeneration = 0;  // 世代数
         idSimulation = setInterval(() => {
           if (!progGeneration()) {
             clearInterval(idSimulation);
           }
           cntGeneration += 1;
+          // 世代数を表示する
           document.getElementById("num-generation").innerHTML = cntGeneration;
         }, 1000);
       }
@@ -93,6 +96,7 @@
         return false;
       }
 
+      // tmpLifes[y][x]の周りにある生命体の数をカウントする
       function cntAroundLife(tmpLifes, x, y) {
         let cntLife = 0;  // 生命体が存在している(true)個数をカウント
         // 全ての要素の周りの8要素を走査  
