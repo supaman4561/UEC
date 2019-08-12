@@ -32,11 +32,13 @@
 
 (define primes (lambda ()
    (letrec ((stream
-             (lambda (prm num) (stream (+ prm 1) (sieve prm num)))
+             (lambda (num)
+               (let ((prm (stream-car num)))
+               (stream-cons prm (stream (sieve prm num)))))
            ))
-           (stream 2 (numbers)))))
-                              
+           (stream (numbers)))))
+
                
 (head 5 (numbers))
 (head 5 (sieve 2 (numbers)))
-(head 5 (primes))
+(head 1000 (primes))
