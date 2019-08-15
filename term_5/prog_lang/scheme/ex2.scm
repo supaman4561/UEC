@@ -28,9 +28,9 @@
 (define get-path
   (lambda (tree name)
     (cond
-      ((equal? name (car tree)) name)
+      ((equal? name (car tree)) (list name))
       ((= (search tree name 0) 0) '())
-      (else (cond (car tree) (apply append (map (lambda (t) (get-path t name)) (cdr tree)))))
+      (else (cons (car tree) (apply append (map (lambda (t) (get-path t name)) (cdr tree)))))
     )
   )
 )
@@ -42,4 +42,6 @@
 (get-cousin kakeizu '秀忠)
 (get-cousin kakeizu '吉宗)
 (get-cousin kakeizu '家継)
-(get-path kakeizu '義直)
+(get-path kakeizu '家康)
+(get-path kakeizu '定信)
+(get-path kakeizu '昌丸)
