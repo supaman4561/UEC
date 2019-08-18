@@ -41,4 +41,4 @@
                
 (head 5 (numbers))
 (head 5 (sieve 2 (numbers)))
-(head 1000 (primes))
+(head 10000 (primes))
