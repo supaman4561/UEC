@@ -1,6 +1,6 @@
 (define kakeizu
   (read
-     (open-input-file "/usr/local/class/scheme/kakeizu")))
+     (open-input-file "./kakeizu")))
 
 (define get-depth
   (lambda (tree d)
@@ -27,21 +27,24 @@
 
 (define get-path
   (lambda (tree name)
-    (cond
-      ((equal? name (car tree)) (list name))
-      ((= (search tree name 0) 0) '())
-      (else (cons (car tree) (apply append (map (lambda (t) (get-path t name)) (cdr tree)))))
-    )
+    (let ((cartr (car tree)))
+      (cond
+        ((equal? name cartr) (list name))
+        ((= (search tree name 0) 0) '())
+        (else (cons cartr (apply append (map (lambda (t) (get-path t name)) (cdr tree)))))
+    ))
   )
 )
 
 (get-depth kakeizu 1)
-(get-depth kakeizu 3)
+(get-depth kakeizu 0)
 (get-depth kakeizu 6)
+(get-depth kakeizu 4)
 (search kakeizu '治察 0)
 (get-cousin kakeizu '秀忠)
 (get-cousin kakeizu '吉宗)
 (get-cousin kakeizu '家継)
-(get-path kakeizu '家康)
-(get-path kakeizu '定信)
-(get-path kakeizu '昌丸)
+(get-cousin kakeizu '斎匡)
+(get-path kakeizu '家光)
+(get-path kakeizu '義直)
+(get-path kakeizu '家定)
