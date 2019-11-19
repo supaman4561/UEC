@@ -55,7 +55,6 @@ void init(void)
   // readTexture("./images/ground.raw", ground_tex);
   readTexture("./images/tile256.raw", ground_tex);
 
-
   /* ワード単位 */
   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 
@@ -68,6 +67,9 @@ void init(void)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
   glClearColor(1.0, 1.0, 1.0, 1.0);
+
+  /* マウスカーソル非表示 */
+  glutSetCursor(GLUT_CURSOR_NONE);
 }
 
 /*
