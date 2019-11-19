@@ -6,6 +6,7 @@
 #include "shape.h"
 #include "keyboard.h"
 #include "texture.h"
+#include "vector.h"
 
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 900
@@ -14,23 +15,19 @@
 #define TRUE 1
 #define FALSE 0 
 
-typedef struct vec2d {
-  GLdouble x;
-  GLdouble y;
-} vec2d_t;
-
-typedef struct vec3d {
-  GLdouble x;
-  GLdouble y;
-  GLdouble z;
-} vec3d_t;
-
 /* 地面 */
 GLdouble ground[][3] = {
   {0, 0, 0},
   {50, 0, 0},
   {50, 0, 50},
   {0, 0, 50}
+};
+
+GLdouble g_coord[][2] = {
+  {0, 10.0},
+  {10.0, 10.0},
+  {10.0, 0},
+  {0, 0}
 };
 
 /* カメラ設定 */
@@ -42,6 +39,10 @@ vec3d_t up = {0.0, 1.0, 0.0};    // 上
 /* 色 */
 const color_t BLACK = {0.0, 0.0, 0.0};
 
+/* テクスチャ */
+GLubyte ground_tex[TEXHEIGHT][TEXWIDTH][RGBA];
+GLubyte blick_tex[TEXHEIGHT][TEXWIDTH][RGBA];
+
 void show_params() {
   printf("pos: %.3lf, %.3lf, %.3lf\n", pos.x, pos.y, pos.z);
   printf("look: %.3lf, %.3lf, %.3lf\n", look.x, look.y, look.z);
@@ -49,18 +50,13 @@ void show_params() {
 
 void init(void)
 {
-  GLubyte ground_tex[TEXHEIGHT][TEXWIDTH][RGBA];
 
   /* テクスチャ読み込み */
-  // readTexture("./images/ground.raw", ground_tex);
   readTexture("./images/tile256.raw", ground_tex);
+  readTexture("./images/blick256x256.raw", blick_tex);
 
   /* ワード単位 */
   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-
-  /* テクスチャ割り当て */
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TEXWIDTH, TEXHEIGHT, 0, 
-    GL_RGBA, GL_UNSIGNED_BYTE, ground_tex);
 
   /* テクスチャを拡大・縮小する方法の指定 */
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -88,18 +84,9 @@ static void scene(void)
   /* テクスチャマッピング開始 */
   glEnable(GL_TEXTURE_2D);
   
-  /* １枚の４角形を描く */
-  glNormal3d(0.0, 0.0, 1.0);
-  glBegin(GL_QUADS);
-  glTexCoord2d(0.0, 10.0);
-  glVertex3dv(ground[0]);
-  glTexCoord2d(10.0, 10.0);
-  glVertex3dv(ground[1]);
-  glTexCoord2d(10.0, 0.0);
-  glVertex3dv(ground[2]);
-  glTexCoord2d(0.0, 0.0);
-  glVertex3dv(ground[3]);
-  glEnd();
+  /* 床  */
+  glNormal3d(0.0, 1.0, 0.0); // 法線ベクトル
+  applyTexture(ground, g_coord, ground_tex);
   
   /* テクスチャマッピング終了 */
   glDisable(GL_TEXTURE_2D);
@@ -116,7 +103,6 @@ void display(void)
   gluLookAt(pos.x, pos.y, pos.z,
 	    pos.x + look.x, pos.y + look.y, pos.z + look.z,
 	    up.x, up.y, up.z);
-  //draw_polygon3d(ground, sizeof(ground) / sizeof(ground[0]), BLACK);
 
   scene();
 
@@ -182,7 +168,7 @@ void moveViewpoint(int x, int y) {
     }
 
     look.x = sin(angle.x) * cos(angle.y);
-    look.y = sin(angle.y);
+    look.y = -sin(angle.y);
     look.z = cos(angle.x) * cos(angle.y);
     wrap = true;
     glutWarpPointer(ww / 2, wh / 2);

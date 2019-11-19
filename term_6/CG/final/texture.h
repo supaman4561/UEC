@@ -7,4 +7,6 @@
 
 void readTexture(const char *filename, GLubyte out[TEXHEIGHT][TEXWIDTH][RGBA]);
 
+void applyTexture(GLdouble base[][3], GLdouble coord[][2], GLubyte texture[TEXHEIGHT][TEXWIDTH][RGBA]);
+
 #endif
