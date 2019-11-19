@@ -9,8 +9,15 @@
 
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 900
+#define MOUSE_SPEED 0.001
+#define WALK_SPEED 0.5
 #define TRUE 1
-#define FALSE 0
+#define FALSE 0 
+
+typedef struct vec2d {
+  GLdouble x;
+  GLdouble y;
+} vec2d_t;
 
 typedef struct vec3d {
   GLdouble x;
@@ -27,6 +34,7 @@ GLdouble ground[][3] = {
 };
 
 /* カメラ設定 */
+vec2d_t angle = {0, 0};
 vec3d_t pos = {0, 2.0, 0};       // 位置
 vec3d_t look = {0.0, 2.0, 1.0};  // 向き
 vec3d_t up = {0.0, 1.0, 0.0};    // 上
@@ -104,7 +112,7 @@ void display(void)
 
   glLoadIdentity();
   gluLookAt(pos.x, pos.y, pos.z,
-	    look.x, look.y, look.z,
+	    pos.x + look.x, pos.y + look.y, pos.z + look.z,
 	    up.x, up.y, up.z);
   //draw_polygon3d(ground, sizeof(ground) / sizeof(ground[0]), BLACK);
 
@@ -125,47 +133,61 @@ void resize(int w, int h) {
 }
 
 void timer(int value) {
-  GLdouble diff_x = look.x - pos.x;
-  GLdouble diff_z = look.z - pos.z;
-  
+
   if (isPush('w')) {
-    pos.x += diff_x;
-    pos.z += diff_z;
-    look.x += diff_x;
-    look.z += diff_z;
+    pos.x += WALK_SPEED * sin(angle.x);
+    pos.z += WALK_SPEED * cos(angle.x);
   }
   if (isPush('s')) {
-    pos.x -= diff_x;
-    pos.z -= diff_z;
-    look.x -= diff_x;
-    look.z -= diff_z;
+    pos.x -= WALK_SPEED * sin(angle.x);
+    pos.z -= WALK_SPEED * cos(angle.x);
   }
   if (isPush('a')) {
-    pos.x += diff_z;
-    pos.z -= diff_x;
-    look.x += diff_z;
-    look.z -= diff_x;
+    pos.x += WALK_SPEED * cos(angle.x);
+    pos.z -= WALK_SPEED * sin(angle.x);
   }
   if (isPush('d')) {
-    pos.x -= diff_z;
-    pos.z += diff_x;
-    look.x -= diff_z;
-    look.z += diff_x;
+    pos.x -= WALK_SPEED * cos(angle.x);
+    pos.z += WALK_SPEED * sin(angle.x);
   }
   glutPostRedisplay();
   glutTimerFunc(17, timer, 0);
 }
 
 void moveViewpoint(int x, int y) {
-  int cx = glutGet(GLUT_WINDOW_WIDTH) / 2;
-  int cy = glutGet(GLUT_WINDOW_HEIGHT) / 2;
-  GLdouble theta = M_PI / cx;
-  GLdouble phi = M_PI / 2 / cy;
-  GLdouble v = 0.5;
+  static bool wrap = false;
+  
+  if (!wrap) {
+    int ww = glutGet(GLUT_WINDOW_WIDTH); 
+    int wh = glutGet(GLUT_WINDOW_HEIGHT);
+    int dx = x - ww / 2;
+    int dy = y - wh / 2;
+    angle.x += dx * MOUSE_SPEED;
+    angle.y += dy * MOUSE_SPEED;
 
-  look.x = pos.x + v * sin((x - cx) * theta);
-  look.z = pos.z + v * cos((x - cx) * theta);
-  look.y = pos.y + v * sin((y - cy) * phi);
+    /* 正規化 */
+    if (angle.x < -M_PI) {
+      angle.x += 2 * M_PI;
+    } else if (angle.x > M_PI) {
+      angle.x -= 2 * M_PI;
+    }
+
+    if (angle.y < -M_PI / 2) {
+      angle.y = -M_PI / 2;
+    }
+    if (angle.y > M_PI / 2) {
+      angle.y = M_PI / 2;
+    }
+
+    look.x = sin(angle.x) * cos(angle.y);
+    look.y = sin(angle.y);
+    look.z = cos(angle.x) * cos(angle.y);
+    wrap = true;
+    glutWarpPointer(ww / 2, wh / 2);
+  } else {
+    wrap = false;
+  }
+
 }
 
 int main(int argc, char *argv[]) 
