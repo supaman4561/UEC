@@ -32,8 +32,8 @@ GLdouble g_coord[][2] = {
 
 /* カメラ設定 */
 vec2d_t angle = {0, 0};
-vec3d_t pos = {0, 2.0, 0};       // 位置
-vec3d_t look = {0.0, 2.0, 1.0};  // 向き
+vec3d_t pos = {25.0, 2.0, 25.0};       // 位置
+vec3d_t look = {0.0, 2.0, 0.0};  // 向き
 vec3d_t up = {0.0, 1.0, 0.0};    // 上
 
 /* 色 */
@@ -150,8 +150,8 @@ void moveViewpoint(int x, int y) {
     int wh = glutGet(GLUT_WINDOW_HEIGHT);
     int dx = x - ww / 2;
     int dy = y - wh / 2;
-    angle.x += dx * MOUSE_SPEED;
-    angle.y += dy * MOUSE_SPEED;
+    angle.x -= dx * MOUSE_SPEED;
+    angle.y -= dy * MOUSE_SPEED;
 
     /* 正規化 */
     if (angle.x < -M_PI) {
@@ -168,7 +168,7 @@ void moveViewpoint(int x, int y) {
     }
 
     look.x = sin(angle.x) * cos(angle.y);
-    look.y = -sin(angle.y);
+    look.y = sin(angle.y);
     look.z = cos(angle.x) * cos(angle.y);
     wrap = true;
     glutWarpPointer(ww / 2, wh / 2);
