@@ -1,0 +1,10 @@
+addpath('usr/local/class/object/MATLAB/sift');
+I1=im2double(rgb2gray(imread('kinkakuji.jpg')));
+I2=im2double(rgb2gray(imread('ginkakuji.jpg')));
+[pnt1, desc1] = sift(I1);
+[pnt2, desc2] = sift(I2);
+tic;
+matches = siftmatch(desc1, desc2);
+fprintf('Matches in %.3f \n', toc);
+figure; colormap gray;
+plotmatches(I1, I2, pnt1(1:2, :), pnt2(1:2, :), matches);
