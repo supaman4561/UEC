@@ -43,11 +43,6 @@ const color_t BLACK = {0.0, 0.0, 0.0};
 GLubyte ground_tex[TEXHEIGHT][TEXWIDTH][RGBA];
 GLubyte blick_tex[TEXHEIGHT][TEXWIDTH][RGBA];
 
-void show_params() {
-  printf("pos: %.3lf, %.3lf, %.3lf\n", pos.x, pos.y, pos.z);
-  printf("look: %.3lf, %.3lf, %.3lf\n", look.x, look.y, look.z);
-}
-
 void init(void)
 {
 
@@ -110,7 +105,8 @@ void display(void)
 
 }
 
-void resize(int w, int h) {
+void resize(int w, int h) 
+{
   glViewport(0, 0, w, h);
 
   glMatrixMode(GL_PROJECTION);
@@ -120,8 +116,8 @@ void resize(int w, int h) {
   glMatrixMode(GL_MODELVIEW);
 }
 
-void timer(int value) {
-
+void movePosition() 
+{
   if (isPush('w')) {
     pos.x += WALK_SPEED * sin(angle.x);
     pos.z += WALK_SPEED * cos(angle.x);
@@ -138,11 +134,10 @@ void timer(int value) {
     pos.x -= WALK_SPEED * cos(angle.x);
     pos.z += WALK_SPEED * sin(angle.x);
   }
-  glutPostRedisplay();
-  glutTimerFunc(17, timer, 0);
 }
 
-void moveViewpoint(int x, int y) {
+void moveViewpoint(int x, int y) 
+{
   static bool wrap = false;
   
   if (!wrap) {
@@ -176,6 +171,12 @@ void moveViewpoint(int x, int y) {
     wrap = false;
   }
 
+}
+
+void timer(int value) {
+  movePosition();
+  glutPostRedisplay();
+  glutTimerFunc(17, timer, 0);
 }
 
 int main(int argc, char *argv[]) 
