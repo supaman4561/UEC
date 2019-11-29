@@ -173,7 +173,8 @@ void moveViewpoint(int x, int y)
 
 }
 
-void timer(int value) {
+void timer(int value) 
+{
   movePosition();
   glutPostRedisplay();
   glutTimerFunc(17, timer, 0);
