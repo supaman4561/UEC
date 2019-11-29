@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 #include <stdbool.h>
+#include <string.h>
 #include <math.h>
-#include "shape.h"
 #include "keyboard.h"
 #include "texture.h"
 #include "vector.h"
+#include "list.h"
 
 #define WINDOW_WIDTH 900
 #define WINDOW_HEIGHT 720
@@ -16,14 +17,14 @@
 #define FALSE 0 
 
 /* 地面 */
-GLdouble ground[][3] = {
+vec3d_t ground[] = {
   {0, 0, 0},
   {50, 0, 0},
   {50, 0, 50},
   {0, 0, 50}
 };
 
-GLdouble g_coord[][2] = {
+vec2d_t g_coord[] = {
   {0, 10.0},
   {10.0, 10.0},
   {10.0, 0},
@@ -37,18 +38,21 @@ vec3d_t look = {0.0, 2.0, 0.0};  // 向き
 vec3d_t up = {0.0, 1.0, 0.0};    // 上
 
 /* 色 */
-const color_t BLACK = {0.0, 0.0, 0.0};
+const vec3d_t BLACK = {0.0, 0.0, 0.0};
 
 /* テクスチャ */
-GLubyte ground_tex[TEXHEIGHT][TEXWIDTH][RGBA];
-GLubyte blick_tex[TEXHEIGHT][TEXWIDTH][RGBA];
+cell_t *texture_list;
 
 void init(void)
 {
-
   /* テクスチャ読み込み */
-  readTexture("./images/tile256.raw", ground_tex);
-  readTexture("./images/blick256x256.raw", blick_tex);
+  texture_t *t;
+  t = (texture_t *)malloc(sizeof(texture_t));
+  readTexture("images/tile256.raw", t->texture);
+  memcpy(t->base, ground, sizeof(t->base));
+  memcpy(t->coord, g_coord, sizeof(t->coord));
+  memcpy(t->up, up, sizeof(t->up));
+  texture_list = append_cell(texture_list, t);
 
   /* ワード単位 */
   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
@@ -69,7 +73,8 @@ void init(void)
 static void scene(void)
 {
   static const GLfloat color[] = { 1.0, 1.0, 1.0, 1.0 };  /* 材質 (色) */
-  
+  texture_t *tp;
+
   /* 材質の設定 */
   glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
   
@@ -80,8 +85,9 @@ static void scene(void)
   glEnable(GL_TEXTURE_2D);
   
   /* 床  */
-  glNormal3d(0.0, 1.0, 0.0); // 法線ベクトル
-  applyTexture(ground, g_coord, ground_tex);
+  tp = (texture_t *)(texture_list->data);
+  glNormal3dv(tp->up); // 法線ベクトル
+  applyTexture(tp->base, tp->coord, tp->texture);
   
   /* テクスチャマッピング終了 */
   glDisable(GL_TEXTURE_2D);
@@ -95,9 +101,9 @@ void display(void)
   glClear(GL_COLOR_BUFFER_BIT);
 
   glLoadIdentity();
-  gluLookAt(pos.x, pos.y, pos.z,
-	    pos.x + look.x, pos.y + look.y, pos.z + look.z,
-	    up.x, up.y, up.z);
+  gluLookAt(pos[0], pos[1], pos[2],
+	    pos[0] + look[0], pos[1] + look[1], pos[2] + look[2],
+	    up[0], up[1], up[2]);
 
   scene();
 
@@ -119,20 +125,20 @@ void resize(int w, int h)
 void movePosition() 
 {
   if (isPush('w')) {
-    pos.x += WALK_SPEED * sin(angle.x);
-    pos.z += WALK_SPEED * cos(angle.x);
+    pos[0] += WALK_SPEED * sin(angle[0]);
+    pos[2] += WALK_SPEED * cos(angle[0]);
   }
   if (isPush('s')) {
-    pos.x -= WALK_SPEED * sin(angle.x);
-    pos.z -= WALK_SPEED * cos(angle.x);
+    pos[0] -= WALK_SPEED * sin(angle[0]);
+    pos[2] -= WALK_SPEED * cos(angle[0]);
   }
   if (isPush('a')) {
-    pos.x += WALK_SPEED * cos(angle.x);
-    pos.z -= WALK_SPEED * sin(angle.x);
+    pos[0] += WALK_SPEED * cos(angle[0]);
+    pos[2] -= WALK_SPEED * sin(angle[0]);
   }
   if (isPush('d')) {
-    pos.x -= WALK_SPEED * cos(angle.x);
-    pos.z += WALK_SPEED * sin(angle.x);
+    pos[0] -= WALK_SPEED * cos(angle[0]);
+    pos[2] += WALK_SPEED * sin(angle[0]);
   }
 }
 
@@ -145,26 +151,26 @@ void moveViewpoint(int x, int y)
     int wh = glutGet(GLUT_WINDOW_HEIGHT);
     int dx = x - ww / 2;
     int dy = y - wh / 2;
-    angle.x -= dx * MOUSE_SPEED;
-    angle.y -= dy * MOUSE_SPEED;
+    angle[0] -= dx * MOUSE_SPEED;
+    angle[1] -= dy * MOUSE_SPEED;
 
     /* 正規化 */
-    if (angle.x < -M_PI) {
-      angle.x += 2 * M_PI;
-    } else if (angle.x > M_PI) {
-      angle.x -= 2 * M_PI;
+    if (angle[0] < -M_PI) {
+      angle[0] += 2 * M_PI;
+    } else if (angle[0] > M_PI) {
+      angle[0] -= 2 * M_PI;
     }
 
-    if (angle.y < -M_PI / 2) {
-      angle.y = -M_PI / 2;
+    if (angle[1] < -M_PI / 2) {
+      angle[1] = -M_PI / 2;
     }
-    if (angle.y > M_PI / 2) {
-      angle.y = M_PI / 2;
+    if (angle[1] > M_PI / 2) {
+      angle[1] = M_PI / 2;
     }
 
-    look.x = sin(angle.x) * cos(angle.y);
-    look.y = sin(angle.y);
-    look.z = cos(angle.x) * cos(angle.y);
+    look[0] = sin(angle[0]) * cos(angle[1]);
+    look[1] = sin(angle[1]);
+    look[2] = cos(angle[0]) * cos(angle[1]);
     wrap = true;
     glutWarpPointer(ww / 2, wh / 2);
   } else {
