@@ -2,6 +2,7 @@
 #define __TEXTURE_H_
 
 #include "vector.h"
+#include "list.h"
 
 #define TEXHEIGHT 256
 #define TEXWIDTH 256
@@ -9,6 +10,7 @@
 
 typedef struct tag {
     GLubyte texture[TEXHEIGHT][TEXWIDTH][RGBA];
+    int corner;
     vec3d_t base[4];
     vec2d_t coord[4];
     vec3d_t up;
@@ -16,6 +18,8 @@ typedef struct tag {
 
 void readTexture(const char *filename, GLubyte out[TEXHEIGHT][TEXWIDTH][RGBA]);
 
-void applyTexture(GLdouble base[][3], GLdouble coord[][2], GLubyte texture[TEXHEIGHT][TEXWIDTH][RGBA]);
+cell_t *readTextureData(const char *filename);
+
+void applyTexture(int corner, vec3d_t base[corner], vec2d_t coord[corner], GLubyte texture[TEXHEIGHT][TEXWIDTH][RGBA]);
 
 #endif

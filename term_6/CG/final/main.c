@@ -16,21 +16,6 @@
 #define TRUE 1
 #define FALSE 0 
 
-/* 地面 */
-vec3d_t ground[] = {
-  {0, 0, 0},
-  {50, 0, 0},
-  {50, 0, 50},
-  {0, 0, 50}
-};
-
-vec2d_t g_coord[] = {
-  {0, 10.0},
-  {10.0, 10.0},
-  {10.0, 0},
-  {0, 0}
-};
-
 /* カメラ設定 */
 vec2d_t angle = {0, 0};
 vec3d_t pos = {25.0, 2.0, 25.0};       // 位置
@@ -46,13 +31,7 @@ cell_t *texture_list;
 void init(void)
 {
   /* テクスチャ読み込み */
-  texture_t *t;
-  t = (texture_t *)malloc(sizeof(texture_t));
-  readTexture("images/tile256.raw", t->texture);
-  memcpy(t->base, ground, sizeof(t->base));
-  memcpy(t->coord, g_coord, sizeof(t->coord));
-  memcpy(t->up, up, sizeof(t->up));
-  texture_list = append_cell(texture_list, t);
+  texture_list = readTextureData("./dat/texture.dat");
 
   /* ワード単位 */
   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
@@ -74,6 +53,7 @@ static void scene(void)
 {
   static const GLfloat color[] = { 1.0, 1.0, 1.0, 1.0 };  /* 材質 (色) */
   texture_t *tp;
+  cell_t *cp;
 
   /* 材質の設定 */
   glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
@@ -84,11 +64,11 @@ static void scene(void)
   /* テクスチャマッピング開始 */
   glEnable(GL_TEXTURE_2D);
   
-  /* 床  */
-  tp = (texture_t *)(texture_list->data);
-  glNormal3dv(tp->up); // 法線ベクトル
-  applyTexture(tp->base, tp->coord, tp->texture);
-  
+  for (cp=texture_list; cp!=NULL; cp=cp->next) {
+    tp = (texture_t *)(cp->data);
+    glNormal3dv(tp->up); // 法線ベクトル
+    applyTexture(tp->corner, tp->base, tp->coord, tp->texture);
+  }
   /* テクスチャマッピング終了 */
   glDisable(GL_TEXTURE_2D);
 
