@@ -28,6 +28,8 @@ const vec3d_t BLACK = {0.0, 0.0, 0.0};
 /* テクスチャ */
 cell_t *texture_list;
 
+GLfloat light0pos[] = { 50, 20.0, 12.5, 1.0 };
+
 void init(void)
 {
   /* テクスチャ読み込み */
@@ -40,12 +42,19 @@ void init(void)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
+  /* テクスチャの繰り返し方法の指定 */
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
   glClearColor(0.5, 0.6, 0.9, 1.0);
 
   glEnable(GL_DEPTH_TEST);
 
   /* マウスカーソル非表示 */
   glutSetCursor(GLUT_CURSOR_NONE);
+
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
 }
 
 /*
@@ -86,6 +95,9 @@ void display(void)
   gluLookAt(pos[0], pos[1], pos[2],
 	    pos[0] + look[0], pos[1] + look[1], pos[2] + look[2],
 	    up[0], up[1], up[2]);
+
+  /* 光源の位置設定 */
+  glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
 
   scene();
 
