@@ -1,7 +1,7 @@
 #include <GL/glut.h>
 #include "vector.h"
 
-vec3d_t scalar_multiple(GLdouble s, vec3d_t vec) 
+vec3d_t multiply_scalar(GLdouble s, vec3d_t vec)
 {
     int i;
 
