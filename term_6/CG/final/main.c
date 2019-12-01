@@ -40,7 +40,7 @@ void init(void)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-  glClearColor(1.0, 1.0, 1.0, 1.0);
+  glClearColor(0.5, 0.6, 0.9, 1.0);
 
   glEnable(GL_DEPTH_TEST);
 
