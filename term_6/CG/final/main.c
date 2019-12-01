@@ -28,6 +28,7 @@ const vec3d_t BLACK = {0.0, 0.0, 0.0};
 /* テクスチャ */
 cell_t *texture_list;
 
+/* 光源の位置 */
 GLfloat light0pos[] = { 50, 20.0, 12.5, 1.0 };
 
 void init(void)
@@ -46,13 +47,16 @@ void init(void)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
+  /* 初期色 */
   glClearColor(0.5, 0.6, 0.9, 1.0);
 
+  /* 隠面処理有効 */
   glEnable(GL_DEPTH_TEST);
 
   /* マウスカーソル非表示 */
   glutSetCursor(GLUT_CURSOR_NONE);
 
+  /* 光源有効 */
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 }
@@ -75,11 +79,13 @@ static void scene(void)
   /* テクスチャマッピング開始 */
   glEnable(GL_TEXTURE_2D);
   
+  /* テクスチャ描画 */
   for (cp=texture_list; cp!=NULL; cp=cp->next) {
     tp = (texture_t *)(cp->data);
     glNormal3dv(tp->up); // 法線ベクトル
     applyTexture(tp->corner, tp->base, tp->coord, tp->texture);
   }
+
   /* テクスチャマッピング終了 */
   glDisable(GL_TEXTURE_2D);
 
@@ -102,7 +108,6 @@ void display(void)
   scene();
 
   glutSwapBuffers();
-
 }
 
 void resize(int w, int h) 
