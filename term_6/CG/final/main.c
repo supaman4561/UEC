@@ -12,14 +12,14 @@
 #define WINDOW_WIDTH 900
 #define WINDOW_HEIGHT 720
 #define MOUSE_SPEED 0.001
-#define WALK_SPEED 0.5
+#define WALK_SPEED 0.35
 #define TRUE 1
 #define FALSE 0 
 
 /* カメラ設定 */
 vec2d_t angle = {0, 0};
-vec3d_t pos = {25.0, 2.0, 25.0};       // 位置
-vec3d_t look = {0.0, 2.0, 0.0};  // 向き
+vec3d_t pos = {2.5, 2.0, 2.5};       // 位置
+vec3d_t look = {1.0, 0.0, 0.0};  // 向き
 vec3d_t up = {0.0, 1.0, 0.0};    // 上
 
 /* 色 */
