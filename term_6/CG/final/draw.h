@@ -1,5 +1,5 @@
-#ifndef __SHAPE_H_
-#define __SHAPE_H_
+#ifndef __DRAW_H_
+#define __DRAW_H_
 
 void draw_circle(GLdouble x, GLdouble y, GLdouble r, int p, color_t c);
 

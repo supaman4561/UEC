@@ -1,7 +1,7 @@
 #include <GL/glut.h>
 #include <math.h>
 #include <stdio.h>
-#include "shape.h"
+#include "draw.h"
 
 /**
  * x : 中心のx座標
