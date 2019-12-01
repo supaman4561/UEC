@@ -42,6 +42,8 @@ void init(void)
 
   glClearColor(1.0, 1.0, 1.0, 1.0);
 
+  glEnable(GL_DEPTH_TEST);
+
   /* マウスカーソル非表示 */
   glutSetCursor(GLUT_CURSOR_NONE);
 }
@@ -78,7 +80,7 @@ static void scene(void)
 
 void display(void)
 {  
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glLoadIdentity();
   gluLookAt(pos[0], pos[1], pos[2],
@@ -170,7 +172,7 @@ int main(int argc, char *argv[])
 {
   glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
   glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
+  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
   glutCreateWindow(argv[0]);
   glutDisplayFunc(display);
   glutReshapeFunc(resize);
