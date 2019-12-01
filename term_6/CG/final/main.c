@@ -81,9 +81,11 @@ static void scene(void)
   
   /* テクスチャ描画 */
   for (cp=texture_list; cp!=NULL; cp=cp->next) {
-    tp = (texture_t *)(cp->data);
-    glNormal3dv(tp->up); // 法線ベクトル
-    applyTexture(tp->corner, tp->base, tp->coord, tp->texture);
+    if ((type_t *)(cp->type) == TYPE_TEXTURE) {
+      tp = (texture_t *)(cp->data);
+      glNormal3dv(tp->up); // 法線ベクトル
+      applyTexture(tp->corner, tp->base, tp->coord, tp->texture);
+    }
   }
 
   /* テクスチャマッピング終了 */

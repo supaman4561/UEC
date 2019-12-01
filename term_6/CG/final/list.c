@@ -2,23 +2,24 @@
 #include <stdlib.h>
 #include "list.h"
 
-cell_t *create_cell(void *obj) 
+cell_t *create_cell(type_t type, void *obj) 
 {
     cell_t *p;
     p = (cell_t *)malloc(sizeof(cell_t));
     if (p == NULL) {
         printf("Could not allocate memory.");
     }
+    p->type = type;
     p->data = obj;
     p->next = NULL;
 
     return p;
 }
 
-cell_t *append_cell(cell_t *head, void *obj) 
+cell_t *append_cell(cell_t *head, type_t type, void *obj) 
 {
     cell_t *p;
-    p = create_cell(obj);
+    p = create_cell(type, obj);
 
     if (head == NULL) {
         return p;

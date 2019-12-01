@@ -1,13 +1,16 @@
 #ifndef __LIST_H_
 #define __LIST_H_
 
+typedef const enum type {TYPE_TEXTURE=0, TYPE_PLANE, TYPE_OBB} type_t;
+
 typedef struct cell {
     struct cell *next;
+    type_t type;
     void *data;
 }cell_t;
 
-cell_t *create_cell(void *obj);
+cell_t *create_cell(type_t type, void *obj);
 
-cell_t *append_cell(cell_t *head, void *obj);
+cell_t *append_cell(cell_t *head, type_t type, void *obj);
 
 #endif 

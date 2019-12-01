@@ -72,7 +72,7 @@ cell_t *readTextureData(const char *filename)
       }
       printf("\n");
 
-      list = append_cell(list, tp);
+      list = append_cell(list, TYPE_TEXTURE, tp);
     }
   } else {
     return NULL;
