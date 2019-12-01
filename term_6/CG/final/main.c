@@ -7,6 +7,7 @@
 #include "keyboard.h"
 #include "texture.h"
 #include "vector.h"
+#include "shape.h"
 #include "list.h"
 
 #define WINDOW_WIDTH 900
@@ -18,7 +19,7 @@
 
 /* カメラ設定 */
 vec2d_t angle = {0, 0};
-vec3d_t pos = {2.5, 2.0, 2.5};       // 位置
+vec3d_t cam_pos = {2.5, 2.0, 2.5};       // 位置
 vec3d_t look = {1.0, 0.0, 0.0};  // 向き
 vec3d_t up = {0.0, 1.0, 0.0};    // 上
 
@@ -31,8 +32,24 @@ cell_t *texture_list;
 /* 光源の位置 */
 GLfloat light0pos[] = { 50, 20.0, 12.5, 1.0 };
 
+/* プレイヤーのOBB */
+vec3d_t pos = {2.5, 2.0, 2.5};
+vec3d_t norm[3] = {
+  {1, 0, 0},
+  {0, 1, 0},
+  {0, 0, 1}
+};
+vec3d_t length = {0.5, 2.0, 0.5};
+obb_t *player;
+
+/* collision */
+cell_t *collision_list;
+
+
 void init(void)
 {
+  player = init_obb(pos, norm, length);
+
   /* テクスチャ読み込み */
   texture_list = readTextureData("./dat/texture.dat");
 
@@ -59,6 +76,18 @@ void init(void)
   /* 光源有効 */
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
+
+  plane_t *plane;
+  plane = (plane_t *)malloc(sizeof(plane_t));
+  plane->pos[0] = 50;
+  plane->pos[1] = 0;
+  plane->pos[2] = 12.5;
+  cpy_3dv(plane->norm_direct[0], norm[0]);
+  cpy_3dv(plane->norm_direct[1], norm[2]);
+  cpy_3dv(plane->normal, norm[1]);
+  plane->length[0] = 50;
+  plane->length[1] = 12.5;
+  collision_list = append_cell(collision_list, TYPE_PLANE, plane);
 }
 
 /*
@@ -81,7 +110,7 @@ static void scene(void)
   
   /* テクスチャ描画 */
   for (cp=texture_list; cp!=NULL; cp=cp->next) {
-    if ((type_t *)(cp->type) == TYPE_TEXTURE) {
+    if ((type_t)(cp->type) == TYPE_TEXTURE) {
       tp = (texture_t *)(cp->data);
       glNormal3dv(tp->up); // 法線ベクトル
       applyTexture(tp->corner, tp->base, tp->coord, tp->texture);
@@ -100,8 +129,9 @@ void display(void)
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glLoadIdentity();
-  gluLookAt(pos[0], pos[1], pos[2],
-	    pos[0] + look[0], pos[1] + look[1], pos[2] + look[2],
+  cpy_3dv(cam_pos, player->pos);
+  gluLookAt(cam_pos[0], cam_pos[1], cam_pos[2],
+	    cam_pos[0] + look[0], cam_pos[1] + look[1], cam_pos[2] + look[2],
 	    up[0], up[1], up[2]);
 
   /* 光源の位置設定 */
@@ -126,20 +156,20 @@ void resize(int w, int h)
 void movePosition() 
 {
   if (isPush('w')) {
-    pos[0] += WALK_SPEED * sin(angle[0]);
-    pos[2] += WALK_SPEED * cos(angle[0]);
+    player->pos[0] += WALK_SPEED * sin(angle[0]);
+    player->pos[2] += WALK_SPEED * cos(angle[0]);
   }
   if (isPush('s')) {
-    pos[0] -= WALK_SPEED * sin(angle[0]);
-    pos[2] -= WALK_SPEED * cos(angle[0]);
+    player->pos[0] -= WALK_SPEED * sin(angle[0]);
+    player->pos[2] -= WALK_SPEED * cos(angle[0]);
   }
   if (isPush('a')) {
-    pos[0] += WALK_SPEED * cos(angle[0]);
-    pos[2] -= WALK_SPEED * sin(angle[0]);
+    player->pos[0] += WALK_SPEED * cos(angle[0]);
+    player->pos[2] -= WALK_SPEED * sin(angle[0]);
   }
   if (isPush('d')) {
-    pos[0] -= WALK_SPEED * cos(angle[0]);
-    pos[2] += WALK_SPEED * sin(angle[0]);
+    player->pos[0] -= WALK_SPEED * cos(angle[0]);
+    player->pos[2] += WALK_SPEED * sin(angle[0]);
   }
 }
 
@@ -182,9 +212,27 @@ void moveViewpoint(int x, int y)
 
 void timer(int value) 
 {
+  cell_t *cp;
+  plane_t *pp;
+  vec3d_t tmp;
+  GLdouble len;
+
   movePosition();
   glutPostRedisplay();
   glutTimerFunc(17, timer, 0);
+
+  player->pos[1] -= WALK_SPEED;
+
+  /* 衝突判定 */
+  for (cp=collision_list; cp!=NULL; cp=cp->next) {
+    if ((type_t)(cp->type) == TYPE_PLANE) {
+      pp = (plane_t *)(cp->data);
+      if (col_obb_plane(*player, *pp, &len)) {
+        multiply_scalar(tmp, len, pp->normal);
+        add_3dv(player->pos, player->pos, tmp);
+      }
+    }
+  }
 }
 
 int main(int argc, char *argv[]) 
