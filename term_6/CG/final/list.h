@@ -1,7 +1,7 @@
 #ifndef __LIST_H_
 #define __LIST_H_
 
-typedef const enum type {TYPE_TEXTURE=0, TYPE_PLANE, TYPE_OBB} type_t;
+typedef enum type_tag {TYPE_TEXTURE=0, TYPE_PLANE, TYPE_OBB} type_t;
 
 typedef struct cell {
     struct cell *next;
