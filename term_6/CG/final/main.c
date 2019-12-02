@@ -30,10 +30,10 @@ const vec3d_t BLACK = {0.0, 0.0, 0.0};
 cell_t *texture_list;
 
 /* 光源の位置 */
-GLfloat light0pos[] = { 50, 20.0, 12.5, 1.0 };
+GLfloat light0pos[] = { 98, 10.0, 12.5, 1.0 };
 
 /* プレイヤーのOBB */
-vec3d_t pos = {2.5, 2.0, 2.5};
+vec3d_t default_pos = {2.5, 2.0, 2.5};
 vec3d_t norm[3] = {
   {1, 0, 0},
   {0, 1, 0},
@@ -45,10 +45,9 @@ obb_t *player;
 /* collision */
 cell_t *collision_list;
 
-
 void init(void)
 {
-  player = init_obb(pos, norm, length);
+  player = init_obb(default_pos, norm, length);
 
   /* テクスチャ読み込み */
   texture_list = readTextureData("./dat/texture.dat");
@@ -79,6 +78,8 @@ void init(void)
   /* 光源有効 */
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
+
+  glAlphaFunc(GL_GREATER, 0.5);
 }
 
 /*
@@ -139,7 +140,7 @@ void resize(int w, int h)
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(30.0, (double)w / (double)h, 0.1, 100.0);
+  gluPerspective(30.0, (double)w / (double)h, 0.1, 150.0);
   
   glMatrixMode(GL_MODELVIEW);
 }
@@ -161,6 +162,9 @@ void movePosition()
   if (isPush('d')) {
     player->pos[0] -= WALK_SPEED * cos(angle[0]);
     player->pos[2] += WALK_SPEED * sin(angle[0]);
+  }
+  if (isPush('e')) {
+    cpy_3dv(player->pos, default_pos);
   }
 }
 
