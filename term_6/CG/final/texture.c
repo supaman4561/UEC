@@ -6,8 +6,6 @@
 #include "vector.h"
 #include "texture.h"
 
-#define MAX_STRLEN 256
-
 void readTexture(const char *filename, GLubyte out[TEXHEIGHT][TEXWIDTH][RGBA])
 {
     FILE *fp;
@@ -23,6 +21,7 @@ void readTexture(const char *filename, GLubyte out[TEXHEIGHT][TEXWIDTH][RGBA])
 
 cell_t *readTextureData(const char *filename) 
 {
+  const int MAX_STRLEN = 256;
   FILE *fp;
   cell_t *list = NULL;
   texture_t *tp;

@@ -53,6 +53,9 @@ void init(void)
   /* テクスチャ読み込み */
   texture_list = readTextureData("./dat/texture.dat");
 
+  /* コリジョン読み込み */
+  collision_list = read_collision_data("./dat/collision.dat");
+  
   /* ワード単位 */
   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 
@@ -76,18 +79,6 @@ void init(void)
   /* 光源有効 */
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
-
-  plane_t *plane;
-  plane = (plane_t *)malloc(sizeof(plane_t));
-  plane->pos[0] = 50;
-  plane->pos[1] = 0;
-  plane->pos[2] = 12.5;
-  cpy_3dv(plane->norm_direct[0], norm[0]);
-  cpy_3dv(plane->norm_direct[1], norm[2]);
-  cpy_3dv(plane->normal, norm[1]);
-  plane->length[0] = 50;
-  plane->length[1] = 12.5;
-  collision_list = append_cell(collision_list, TYPE_PLANE, plane);
 }
 
 /*

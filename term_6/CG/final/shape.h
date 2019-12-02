@@ -18,6 +18,8 @@ typedef struct obb {
 
 obb_t *init_obb(vec3d_t pos, vec3d_t norm[3], vec3d_t length);
 
+cell_t *read_collision_data(const char *filename);
+
 GLdouble projected_length_of_plane(plane_t plane, vec3d_t norm);
 
 GLdouble projected_length_of_obb(obb_t obb, vec3d_t norm);
