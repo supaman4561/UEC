@@ -139,7 +139,7 @@ void resize(int w, int h)
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(30.0, (double)w / (double)h, 1.0, 100.0);
+  gluPerspective(30.0, (double)w / (double)h, 0.1, 100.0);
   
   glMatrixMode(GL_MODELVIEW);
 }
