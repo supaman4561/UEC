@@ -190,13 +190,7 @@ bool col_obb_plane(obb_t obb, plane_t plane, GLdouble *len)
     dist = fabs(inner_product_3dv(tmp, sep));
 
     /* 戻す距離を計算 */
-    if (len != NULL) {
-        if (dist > 0) {
-            *len = rb - fabs(dist);
-        } else {
-            *len = rb + fabs(dist);
-        }
-    }
+    *len = rb - dist;
 
     if (dist > rb) {
         return false;
