@@ -35,6 +35,7 @@ void free_cell(cell_t *head)
         if (head->next != NULL) {
             free_cell(head->next);
         }
+        free(head->data);
         free(head);
     }
 }
