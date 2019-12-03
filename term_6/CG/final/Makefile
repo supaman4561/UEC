@@ -1,4 +1,4 @@
-PROGRAM = main
+PROGRAM = paperman
 OBJS = main.o keyboard.o texture.o list.o shape.o vector.o
 CC = gcc
 CFLAGS = -Wall -O2 -I/usr/X11R6/include
