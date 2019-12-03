@@ -44,6 +44,7 @@ cell_t *collision_list;
 
 void init(void)
 {
+  /* player obb 初期化 */
   player = init_obb(default_pos, norm, length);
 
   /* テクスチャ読み込み */
@@ -76,6 +77,7 @@ void init(void)
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 
+  /* アルファ値関数設定 */
   glAlphaFunc(GL_GREATER, 0.5);
 }
 
@@ -216,8 +218,9 @@ void timer(int value)
 
   movePosition();
   glutPostRedisplay();
-  glutTimerFunc(17, timer, 0);
+  glutTimerFunc(17, timer, 0);  /* 60fps */
 
+  /* 自由落下 */
   player->pos[1] -= WALK_SPEED;
 
   /* 衝突判定 */
