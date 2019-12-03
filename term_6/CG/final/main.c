@@ -23,9 +23,6 @@ vec3d_t cam_pos = {2.5, 2.0, 2.5};       // 位置
 vec3d_t look = {1.0, 0.0, 0.0};  // 向き
 vec3d_t up = {0.0, 1.0, 0.0};    // 上
 
-/* 色 */
-const vec3d_t BLACK = {0.0, 0.0, 0.0};
-
 /* テクスチャ */
 cell_t *texture_list;
 
@@ -47,6 +44,7 @@ cell_t *collision_list;
 
 void init(void)
 {
+  /* player obb 初期化 */
   player = init_obb(default_pos, norm, length);
 
   /* テクスチャ読み込み */
@@ -79,6 +77,7 @@ void init(void)
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 
+  /* アルファ値関数設定 */
   glAlphaFunc(GL_GREATER, 0.5);
 }
 
@@ -166,6 +165,11 @@ void movePosition()
   if (isPush('e')) {
     cpy_3dv(player->pos, default_pos);
   }
+  if (isPush('q')) {
+    free_cell(texture_list);
+    free_cell(collision_list);
+    exit(0);
+  }
 }
 
 void moveViewpoint(int x, int y) 
@@ -214,8 +218,9 @@ void timer(int value)
 
   movePosition();
   glutPostRedisplay();
-  glutTimerFunc(17, timer, 0);
+  glutTimerFunc(17, timer, 0);  /* 60fps */
 
+  /* 自由落下 */
   player->pos[1] -= WALK_SPEED;
 
   /* 衝突判定 */

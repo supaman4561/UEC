@@ -36,21 +36,17 @@ cell_t *readTextureData(const char *filename)
       // テクスチャ画像
       data = strtok(line, ",");
       readTexture(data, tp->texture);
-      printf("%s\n", data);
 
       // 角
       data = strtok(NULL, ",");
       tp->corner = atoi(data);
-      printf("%d\n", tp->corner);
 
       // テクスチャマッピング先オブジェクト
       for (i=0;  i<(tp->corner); i++) {
         for (j=0; j<3; j++) {
           data = strtok(NULL, ",");
           tp->base[i][j] = atof(data);
-          printf("%lf ", tp->base[i][j]);
         }
-        printf("\n");
       }
 
       // テクスチャ座標
@@ -58,18 +54,14 @@ cell_t *readTextureData(const char *filename)
         for (j=0; j<2; j++) {
           data = strtok(NULL, ",");
           tp->coord[i][j] = atof(data);
-          printf("%lf ", tp->coord[i][j]);
         }
-        printf("\n");
       }
 
       // 法線ベクトル
       for (i=0; i<3; i++) {
         data = strtok(NULL, ",");
         tp->up[i] = atof(data);
-        printf("%lf ", tp->up[i]);
       }
-      printf("\n");
 
       list = append_cell(list, TYPE_TEXTURE, tp);
     }

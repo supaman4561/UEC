@@ -13,4 +13,6 @@ cell_t *create_cell(type_t type, void *obj);
 
 cell_t *append_cell(cell_t *head, type_t type, void *obj);
 
+void free_cell(cell_t *head);
+
 #endif 
