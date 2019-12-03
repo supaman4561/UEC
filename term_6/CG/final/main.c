@@ -166,6 +166,11 @@ void movePosition()
   if (isPush('e')) {
     cpy_3dv(player->pos, default_pos);
   }
+  if (isPush('q')) {
+    free_cell(texture_list);
+    free_cell(collision_list);
+    exit(0);
+  }
 }
 
 void moveViewpoint(int x, int y) 

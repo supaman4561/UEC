@@ -28,3 +28,13 @@ cell_t *append_cell(cell_t *head, type_t type, void *obj)
     head->next = p;
     return head;
 }
+
+void free_cell(cell_t *head)
+{
+    if (head != NULL) {
+        if (head->next != NULL) {
+            free_cell(head->next);
+        }
+        free(head);
+    }
+}
