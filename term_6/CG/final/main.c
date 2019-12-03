@@ -23,9 +23,6 @@ vec3d_t cam_pos = {2.5, 2.0, 2.5};       // 位置
 vec3d_t look = {1.0, 0.0, 0.0};  // 向き
 vec3d_t up = {0.0, 1.0, 0.0};    // 上
 
-/* 色 */
-const vec3d_t BLACK = {0.0, 0.0, 0.0};
-
 /* テクスチャ */
 cell_t *texture_list;
 
