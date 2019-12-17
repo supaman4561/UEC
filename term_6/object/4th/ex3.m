@@ -20,10 +20,12 @@ end
 imload = @(path) im2double(rgb2gray(imread(path)));
 
 % positive images (cats)
-P = cellfun(imload, list(1:100), 'UniformOutput', false);
+PImgPath = list(1:100);
+P = cellfun(imload, PImgPath, 'UniformOutput', false);
 % negative images (other animals)
 rp = randperm(900, 100) + 100;
-N = cellfun(imload, list(rp), 'UniformOutput', false);
+NImgPath = list(rp);
+N = cellfun(imload, NImgPath, 'UniformOutput', false);
 
 % SIFT feature vectors
 [pnt, desc] = cellfun(@(I) sift_rand(I, 'randn', 300), [P N], ...
@@ -32,5 +34,10 @@ N = cellfun(imload, list(rp), 'UniformOutput', false);
 % make codebook
 vec = cell2mat(desc);
 [codebook, idx] = vl_kmeans(vec, 500);
-
+                        
 save('codebook.mat', 'codebook');
+save('pathlist.mat', 'list');
+save('positive.mat', 'P');
+save('negative.mat', 'N'); 
+save('PImgPath.mat', 'PImgPath');
+save('NImgPath.mat', 'NImgPath');
