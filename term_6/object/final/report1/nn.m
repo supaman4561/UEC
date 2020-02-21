@@ -16,7 +16,7 @@ function acc = nn(train_p, train_n, test_p, test_n)
     % 認識率の計算
     border = size(train_p, 1);
     nIdxP = nIdx(1:size(test_p, 1));                % ポジティブの分類先Index
-    nIdxN = nIdx((size(test_p, 1)+1):numel(nIdx));  % ネガティブの分類先Index
+    nIdxN = nIdx((size(test_p, 1)+1):end);  % ネガティブの分類先Index
     total = size(test, 1);
     acc = (sum(nIdxP <= border) + sum(nIdxN > border)) / total;  % TP+TN/total
 end
