@@ -1,10 +1,6 @@
-function I = normImage(imgpath)
-  I = imread(imgpath);
-end
+addpath('/usr/local/class/object/MATLAB/sift');
+run('/usr/local/class/object/MATLAB/vlfeat/vl_setup');
+addpath('/usr/local/class/object/matconvnet');
+addpath('/usr/local/class/object/matconvnet/matlab');
+vl_setupnn;
 
-// colorhistgramの作成
-function acc = NN_ColHist(train, test)
-  train_ch = cellfun(im2ColorHist, train, 'UniformOutput', false)
-  test_ch = cellfun(im2ColorHist, test, 'UniformOutput', false)
-  
-end

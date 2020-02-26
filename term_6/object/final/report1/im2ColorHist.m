@@ -1,9 +1,10 @@
-function ch = im2ColorHist(I)
+function ch = im2ColorHist(imgpath)
   % 各チャネルの要素を取得
+  I = imread(imgpath);
   red = I(:, :, 1);
   green = I(:, :, 2);
   blue = I(:, :, 3);
-　
+
   % 64色に減色
   X64 = floor(double(red)/64)*4*4 + floor(double(green)/64)*4 + floor(double(blue)/64);
 
