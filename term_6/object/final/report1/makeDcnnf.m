@@ -1,6 +1,6 @@
 function dcnnf = makeDcnnf(imgpath)
     net = load('imagenet-caffe-alex.mat');
-    ims = loadImage(new, imgpath);
+    ims = loadImage(net, imgpath);
     res = vl_simplenn(net, ims);
     dcnnf = squeeze(res(end-3).x);
     dcnnf = dcnnf / norm(dcnnf);

@@ -13,6 +13,7 @@ function accuracy = cross_validation(cv, pos, neg, func)
     test_n = neg(:, find(mod(nIdx, cv)==(i-1)));
     
     acc_ = func(train_p, train_n, test_p, test_n);
+    fprintf("[%d] acc = %f\n", i, acc_);
     acc(i) = acc_;
   end
   accuracy = mean(acc);
